@@ -152,7 +152,7 @@ export default function ClientLayout({
           </div>
         </div>
         <div className="col-start-2 row-span-2 row-start-1 overflow-hidden">
-          <main>{children}</main>
+          {user ? <main>{children}</main> : null}
         </div>
       </div>
     </>
