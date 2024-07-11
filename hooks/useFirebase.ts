@@ -65,93 +65,12 @@ const useFirebase = () => {
     }
   };
 
-  const saveResume = async ({
-    email,
-    resume,
-    fileName,
-  }: {
-    email: string;
-    resume: string | Record<string, unknown> | null;
-    fileName: string | null;
-  }) => {
-    if (!resume) return;
-    setFirebaseLoading(true);
-    try {
-      const docRef = doc(database, 'users', email);
-
-      await updateDoc(docRef, {
-        resumes: arrayUnion({
-          fileName,
-          resume,
-          createdAt: new Date().toISOString(),
-        }),
-      });
-      const docSnapshot = await getDoc(docRef);
-      const data = docSnapshot.data();
-
-      return data;
-    } catch (error: unknown) {
-      console.error('Error reading document: ', error);
-      setFirebaseError(error);
-    } finally {
-      setFirebaseLoading(false);
-    }
-  };
-  const saveSelectedResumeIndex = async ({
-    email,
-    index,
-  }: {
-    email: string;
-    index: number;
-  }) => {
-    if (!email) return;
-    setFirebaseLoading(true);
-    try {
-      const docRef = doc(database, 'users', email);
-
-      await updateDoc(docRef, {
-        selectedResumeIndex: index,
-      });
-      const docSnapshot = await getDoc(docRef);
-      const data = docSnapshot.data();
-
-      return data;
-    } catch (error: unknown) {
-      console.error('Error reading document: ', error);
-      setFirebaseError(error);
-    } finally {
-      setFirebaseLoading(false);
-    }
-  };
-
-  const getResumes = async (email: string) => {
-    if (!email) return;
-    setFirebaseLoading(true);
-    try {
-      const docRef = doc(database, 'users', email);
-
-      const docSnapshot = await getDoc(docRef);
-      const data = docSnapshot.data();
-
-      return data?.resumes || null;
-    } catch (error: unknown) {
-      console.error('Error reading document: ', error);
-      setFirebaseError(error);
-      return null;
-    } finally {
-      setFirebaseLoading(false);
-    }
-  };
-
   return {
     firebaseError,
     firebaseLoading,
     getUserData,
     getUsers,
     checkIfAdmin,
-    saveResume,
-    getResumes,
-    saveSelectedResumeIndex,
   };
 };
 
