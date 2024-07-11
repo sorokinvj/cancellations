@@ -2,34 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-accent: theme('colors.accent');
-  --color-neutral: theme('colors.neutral');
+body {
+  margin: 0;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+select {
+  padding: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 @layer components {
-    .html-container h1 {
-      @apply text-3xl uppercase mb-4 ;
-    }
-    .html-container h2 {
-      @apply text-2xl uppercase mb-4 ;
-    }
-    .html-container h3 {
-      @apply font-bold;
-    }
-    .html-container strong {
-      @apply uppercase;
-    }
-    .html-container *:empty {
-      @apply hidden;
-    }
-    .html-container li {
-      @apply mb-4 ml-6 list-disc
-    }
-    .html-container ul {
-      @apply mt-4
-    }
-    .html-container p, .html-container strong {
-      @apply mb-4 
-    }
+  .flair-btn-primary {
+    @apply rounded bg-blue-500 font-bold normal-case shadow hover:bg-blue-600 active:bg-blue-700 text-white flex items-center space-x-1 justify-center;
   }
+
+  .flair-btn-primary.btn-disabled {
+    @apply bg-blue-300;
+  }
+
+  .flair-btn-secondary {
+    @apply rounded border border-neutral-200 bg-white font-bold normal-case shadow hover:bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center space-x-1 justify-center;
+  }
+
+  .flair-centerify {
+    @apply flex justify-center items-center;
+  }
+}
+
+.dropdown-content {
+  @apply border border-slate-200;
+}
+
+.menu li > *:not(ul):not(.menu-title):not(details):active {
+  @apply bg-gray-300 text-slate-900;
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+}
+
+.select {
+  /* @apply text-base; */
+}
+
+.label-text {
+  @apply font-medium;
+}
+
+.bg-dot-pattern {
+  --d: 1.5px;
+
+  background: radial-gradient(
+      circle at var(--d) var(--d),
+      #dddddd calc(var(--d) - 1px),
+      #fafafa var(--d)
+    )
+    0 0 / 20px 20px;
+}
+
+.tremor-BarList-bar,
+.tremor-BarList-labelWrapper {
+  height: 60px;
+}
+
+.flair-audio.rap-container {
+  box-shadow: none;
+}

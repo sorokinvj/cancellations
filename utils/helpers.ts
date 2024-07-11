@@ -42,7 +42,6 @@ export function normalizeTimestamp(
   }
 }
 
-
 function stringifyError(error: unknown) {
   const cache = new Set();
   return JSON.stringify(error, (key, value) => {
@@ -68,4 +67,8 @@ export const parseErrorMessage = (error: unknown): string => {
   }
 
   return stringifyError(error);
+};
+
+export const getRandomNumber = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
