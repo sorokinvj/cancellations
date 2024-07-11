@@ -11,7 +11,6 @@ import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
 import { auth } from '@/firebase/config';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import Login from '../Login/Login';
 
 const SidebarButton: React.FC<{
   link: string;
