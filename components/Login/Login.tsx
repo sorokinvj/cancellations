@@ -3,12 +3,9 @@ import { FaCheckCircle } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { Checkbox, CheckboxField } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/fieldset';
-import { useState } from 'react';
 import Link from 'next/link';
 
 function PageLogin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
     <div className="bg-flair-900 relative h-screen w-screen">
       <div className="absolute z-20 flex h-screen w-screen flex-col justify-center overflow-y-auto">
@@ -89,12 +86,7 @@ function PageLogin() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => {
-                    setIsLoggedIn(true);
-                  }}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-gray-800 transition duration-150 hover:bg-gray-50 active:bg-gray-100"
-                >
+                <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-gray-800 transition duration-150 hover:bg-gray-50 active:bg-gray-100">
                   <img
                     className="h-6 w-6"
                     src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -159,12 +151,7 @@ function PageLogin() {
                       Forgot password?
                     </a>
                   </div>
-                  <Button
-                    className="w-full text-flair-600"
-                    onClick={() => {
-                      setIsLoggedIn(true);
-                    }}
-                  >
+                  <Button className="w-full text-flair-600">
                     Login with Email
                   </Button>
                   <p className="text-sm font-light text-gray-500">

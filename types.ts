@@ -60,4 +60,4 @@ export type WeeklySummary = {
   newUsers: number;
   newUsersWithMeetings: number;
   activeVisitors: number;
-}
+};

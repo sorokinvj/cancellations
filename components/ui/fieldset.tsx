@@ -9,17 +9,23 @@ import {
   type FieldsetProps as HeadlessFieldsetProps,
   type LabelProps as HeadlessLabelProps,
   type LegendProps as HeadlessLegendProps,
-} from '@headlessui/react'
-import clsx from 'clsx'
-import type React from 'react'
+} from '@headlessui/react';
+import clsx from 'clsx';
+import type React from 'react';
 
-export function Fieldset({ className, ...props }: { disabled?: boolean } & HeadlessFieldsetProps) {
+export function Fieldset({
+  className,
+  ...props
+}: { disabled?: boolean } & HeadlessFieldsetProps) {
   return (
     <HeadlessFieldset
       {...props}
-      className={clsx(className, '[&>*+[data-slot=control]]:mt-6 [&>[data-slot=text]]:mt-1')}
+      className={clsx(
+        className,
+        '[&>*+[data-slot=control]]:mt-6 [&>[data-slot=text]]:mt-1',
+      )}
     />
-  )
+  );
 }
 
 export function Legend({ ...props }: HeadlessLegendProps) {
@@ -32,11 +38,20 @@ export function Legend({ ...props }: HeadlessLegendProps) {
         'text-base/6 font-semibold text-zinc-950 data-[disabled]:opacity-50 dark:text-white sm:text-sm/6',
       )}
     />
-  )
+  );
 }
 
-export function FieldGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  return <div {...props} data-slot="control" className={clsx(className, 'space-y-8')} />
+export function FieldGroup({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'>) {
+  return (
+    <div
+      {...props}
+      data-slot="control"
+      className={clsx(className, 'space-y-8')}
+    />
+  );
 }
 
 export function Field({ className, ...props }: HeadlessFieldProps) {
@@ -53,10 +68,13 @@ export function Field({ className, ...props }: HeadlessFieldProps) {
       )}
       {...props}
     />
-  )
+  );
 }
 
-export function Label({ className, ...props }: { className?: string } & HeadlessLabelProps) {
+export function Label({
+  className,
+  ...props
+}: { className?: string } & HeadlessLabelProps) {
   return (
     <HeadlessLabel
       {...props}
@@ -66,14 +84,13 @@ export function Label({ className, ...props }: { className?: string } & Headless
         'select-none text-base/6 text-zinc-950 data-[disabled]:opacity-50 dark:text-white sm:text-sm/6',
       )}
     />
-  )
+  );
 }
 
 export function Description({
   className,
-  disabled,
   ...props
-}: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+}: { className?: string } & HeadlessDescriptionProps) {
   return (
     <HeadlessDescription
       {...props}
@@ -83,14 +100,13 @@ export function Description({
         'text-base/6 text-zinc-500 data-[disabled]:opacity-50 dark:text-zinc-400 sm:text-sm/6',
       )}
     />
-  )
+  );
 }
 
 export function ErrorMessage({
   className,
-  disabled,
   ...props
-}: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+}: { className?: string } & HeadlessDescriptionProps) {
   return (
     <HeadlessDescription
       {...props}
@@ -100,5 +116,5 @@ export function ErrorMessage({
         'text-base/6 text-red-600 data-[disabled]:opacity-50 dark:text-red-500 sm:text-sm/6',
       )}
     />
-  )
+  );
 }

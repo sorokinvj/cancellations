@@ -236,49 +236,6 @@ const agentList = [
   },
 ];
 
-const leadList = [
-  {
-    leadName: 'Robert Lee',
-    intentLevel: 'High',
-    date: '2024-05-10',
-    agentName: 'John Smith',
-    leadType: 'Buyer',
-    summary: 'Interested in purchasing a 3-bedroom house in downtown area.',
-  },
-  {
-    leadName: 'Sophia Martinez',
-    intentLevel: 'High',
-    date: '2024-05-11',
-    agentName: 'Emily Johnson',
-    leadType: 'Seller',
-    summary: 'Looking to sell her 2-bedroom apartment in the suburbs.',
-  },
-  {
-    leadName: 'William Rodriguez',
-    intentLevel: 'Medium',
-    date: '2024-05-12',
-    agentName: 'Michael Brown',
-    leadType: 'Buyer',
-    summary: 'Considering options for investment properties.',
-  },
-  {
-    leadName: 'Olivia Garcia',
-    intentLevel: 'Medium',
-    date: '2024-05-13',
-    agentName: 'Jessica Davis',
-    leadType: 'Seller',
-    summary: 'Needs to sell her home quickly due to relocation for work.',
-  },
-  {
-    leadName: 'James Walker',
-    intentLevel: 'Low',
-    date: '2024-05-14',
-    agentName: 'David Wilson',
-    leadType: 'Buyer',
-    summary: 'Interested in a vacation home near the coast.',
-  },
-];
-
 const callFlowList = [
   {
     flow: ['rapport building', 'search criteria', 'objections', 'follow-ups'],
@@ -317,10 +274,6 @@ callFlowList.forEach(flow => {
     (flow.appointments / flow.conversations).toFixed(2),
   );
 });
-
-const sortedCallFlowList = callFlowList.sort(
-  (a, b) => b.conversionRate - a.conversionRate,
-);
 
 const freqBarChartData: ChartData<'line', number[], string> = {
   labels: [
@@ -454,21 +407,15 @@ const Overview: React.FC<{}> = () => {
   const [topLeadDetailsModal, setTopLeadDetailsModal] = useState(false);
 
   const [topAgentDetailsModal, setTopAgentDetailsModal] = useState(false);
-  const [selectedAgent, setSelectedAgent] = useState<
-    (typeof agentList)[0] | null
-  >(null);
+  const [selectedAgent] = useState<(typeof agentList)[0] | null>(null);
 
   const [topMotivationDetailsModal, setTopMotivationDetailsModal] =
     useState(false);
-  const [selectedMotivation, setSelectedMotivation] = useState<string | null>(
-    null,
-  );
+  const [selectedMotivation] = useState<string | null>(null);
 
   const [topObjectionDetailsModal, setTopObjectionDetailsModal] =
     useState(false);
-  const [selectedObjection, setSelectedObjection] = useState<string | null>(
-    null,
-  );
+  const [selectedObjection] = useState<string | null>(null);
 
   const stats = [
     { name: 'Requests', stat: '5,231' },
@@ -544,37 +491,6 @@ const Overview: React.FC<{}> = () => {
 
   const currencyFormatter = (number: number) => {
     return Intl.NumberFormat('us').format(number).toString();
-  };
-
-  const callStatuses = [
-    {
-      name: 'Pick-up',
-      amount: 8928,
-      share: '80%',
-      color: 'bg-sky-500',
-    },
-    {
-      name: 'Voicemail',
-      amount: 2192,
-      share: '20%',
-      color: 'bg-orange-500',
-    },
-  ];
-
-  const getColor = (value: number) => {
-    if (value >= 90) {
-      return 'green';
-    }
-    if (value >= 80) {
-      return 'lime';
-    }
-    if (value >= 70) {
-      return 'yellow';
-    }
-    if (value >= 60) {
-      return 'orange';
-    }
-    return 'red';
   };
 
   return (

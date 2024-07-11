@@ -1,8 +1,8 @@
 import {
   Textarea as HeadlessTextarea,
   type TextareaProps as HeadlessTextareaProps,
-} from '@headlessui/react'
-import { clsx } from 'clsx'
+} from '@headlessui/react';
+import { clsx } from 'clsx';
 
 export function Textarea({ className, ...props }: HeadlessTextareaProps) {
   return (
@@ -25,7 +25,8 @@ export function Textarea({ className, ...props }: HeadlessTextareaProps) {
 
         // Disabled state
         'has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-zinc-950/5 before:has-[[data-disabled]]:shadow-none',
-      ])}>
+      ])}
+    >
       <HeadlessTextarea
         className={clsx([
           // Basic layout
@@ -52,5 +53,5 @@ export function Textarea({ className, ...props }: HeadlessTextareaProps) {
         {...props}
       />
     </span>
-  )
+  );
 }

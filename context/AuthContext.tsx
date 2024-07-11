@@ -67,7 +67,10 @@ export const AuthContextProvider = ({
   };
 
   const loginWithToken = async (token: string) => {
-    console.log('process.env.NEXT_PUBLIC_SERVER_URL=',process.env.NEXT_PUBLIC_SERVER_URL);
+    console.log(
+      'process.env.NEXT_PUBLIC_SERVER_URL=',
+      process.env.NEXT_PUBLIC_SERVER_URL,
+    );
     try {
       setLoading(true);
       await axios.post(
@@ -122,7 +125,7 @@ export const AuthContextProvider = ({
         logout,
         error,
         resetPassword,
-        loginWithToken
+        loginWithToken,
       }}
     >
       {children}

@@ -33,7 +33,6 @@ import {
 import { Modal } from '@/components/ui/Modal';
 import { Radio } from '@/components/ui/radio';
 import { refundDummyDataDefault } from '@/mocks/data';
-import { Head } from 'next/document';
 import { FaCheckCircle } from 'react-icons/fa';
 
 const Refunds: React.FC = () => {
@@ -84,7 +83,6 @@ const Refunds: React.FC = () => {
                 <Menu.Items className="absolute left-0 z-20 mt-2 w-72 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
                   <div className="cursor-pointer select-none py-1">
                     <a
-                      onClick={e => {}}
                       className={clsx(
                         'flex bg-gray-100 px-4 py-2 text-sm text-gray-800',
                       )}

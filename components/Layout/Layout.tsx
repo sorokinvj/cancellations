@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IconType } from 'react-icons/lib';
 import { FaChartSimple } from 'react-icons/fa6';
-import { FaPhone, FaQuestionCircle, FaCog } from 'react-icons/fa';
+import { FaPhone, FaCog } from 'react-icons/fa';
 import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
 

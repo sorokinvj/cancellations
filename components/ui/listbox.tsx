@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   Listbox as HeadlessListbox,
@@ -9,9 +9,9 @@ import {
   Transition as HeadlessTransition,
   type ListboxOptionProps as HeadlessListboxOptionProps,
   type ListboxProps as HeadlessListboxProps,
-} from '@headlessui/react'
-import clsx from 'clsx'
-import { Fragment } from 'react'
+} from '@headlessui/react';
+import clsx from 'clsx';
+import { Fragment } from 'react';
 
 export function Listbox<T>({
   className,
@@ -21,11 +21,11 @@ export function Listbox<T>({
   children: options,
   ...props
 }: {
-  className?: string
-  placeholder?: React.ReactNode
-  autoFocus?: boolean
-  'aria-label'?: string
-  children?: React.ReactNode
+  className?: string;
+  placeholder?: React.ReactNode;
+  autoFocus?: boolean;
+  'aria-label'?: string;
+  children?: React.ReactNode;
 } & Omit<HeadlessListboxProps<typeof Fragment, T>, 'multiple'>) {
   return (
     <HeadlessListbox {...props} multiple={false}>
@@ -53,12 +53,17 @@ export function Listbox<T>({
 
           // Disabled state
           'data-[disabled]:opacity-50 before:data-[disabled]:bg-zinc-950/5 before:data-[disabled]:shadow-none',
-        ])}>
+        ])}
+      >
         <HeadlessListboxSelectedOption
           as="span"
           options={options}
           placeholder={
-            placeholder && <span className="block truncate text-zinc-500">{placeholder}</span>
+            placeholder && (
+              <span className="block truncate text-zinc-500">
+                {placeholder}
+              </span>
+            )
           }
           className={clsx([
             // Basic layout
@@ -91,7 +96,8 @@ export function Listbox<T>({
             className="size-5 stroke-zinc-500 group-data-[disabled]:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]"
             viewBox="0 0 16 16"
             aria-hidden="true"
-            fill="none">
+            fill="none"
+          >
             <path
               d="M5.75 10.75L8 13L10.25 10.75"
               strokeWidth={1.5}
@@ -111,7 +117,8 @@ export function Listbox<T>({
         as={Fragment}
         leave="transition-opacity duration-100 ease-in pointer-events-none"
         leaveFrom="opacity-100"
-        leaveTo="opacity-0">
+        leaveTo="opacity-0"
+      >
         <HeadlessListboxOptions
           anchor={{
             to: 'selection start',
@@ -136,12 +143,13 @@ export function Listbox<T>({
 
             // Shadows
             'shadow-lg ring-1 ring-zinc-950/10 dark:ring-inset dark:ring-white/10',
-          )}>
+          )}
+        >
           {options}
         </HeadlessListboxOptions>
       </HeadlessTransition>
     </HeadlessListbox>
-  )
+  );
 }
 
 export function ListboxOption<T>({
@@ -158,13 +166,15 @@ export function ListboxOption<T>({
 
     // Avatars
     '[&>[data-slot=avatar]]:size-6 sm:[&>[data-slot=avatar]]:size-5',
-  )
+  );
 
   return (
     <HeadlessListboxOption as={Fragment} {...props}>
       {({ selectedOption }) => {
         if (selectedOption) {
-          return <div className={clsx(className, sharedClasses)}>{children}</div>
+          return (
+            <div className={clsx(className, sharedClasses)}>{children}</div>
+          );
         }
 
         return (
@@ -184,12 +194,14 @@ export function ListboxOption<T>({
 
               // Disabled
               'data-[disabled]:opacity-50',
-            )}>
+            )}
+          >
             <svg
               className="relative hidden size-5 self-center stroke-current group-data-[selected]/option:inline sm:size-4"
               viewBox="0 0 16 16"
               fill="none"
-              aria-hidden="true">
+              aria-hidden="true"
+            >
               <path
                 d="M4 8.5l3 3L12 4"
                 strokeWidth={1.5}
@@ -197,21 +209,29 @@ export function ListboxOption<T>({
                 strokeLinejoin="round"
               />
             </svg>
-            <span className={clsx(className, sharedClasses, 'col-start-2')}>{children}</span>
+            <span className={clsx(className, sharedClasses, 'col-start-2')}>
+              {children}
+            </span>
           </div>
-        )
+        );
       }}
     </HeadlessListboxOption>
-  )
+  );
 }
 
-export function ListboxLabel({ className, ...props }: React.ComponentPropsWithoutRef<'span'>) {
+export function ListboxLabel({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'span'>) {
   return (
     <span
-      className={clsx(className, 'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0')}
+      className={clsx(
+        className,
+        'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0',
+      )}
       {...props}
     />
-  )
+  );
 }
 
 export function ListboxDescription({
@@ -225,8 +245,9 @@ export function ListboxDescription({
         className,
         'flex flex-1 overflow-hidden text-zinc-500 before:w-2 before:min-w-0 before:shrink group-data-[focus]/option:text-white dark:text-zinc-400',
       )}
-      {...props}>
+      {...props}
+    >
       <span className="flex-1 truncate">{children}</span>
     </span>
-  )
+  );
 }

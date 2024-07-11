@@ -3,11 +3,14 @@ import {
   Switch as HeadlessSwitch,
   type FieldProps as HeadlessFieldProps,
   type SwitchProps as HeadlessSwitchProps,
-} from '@headlessui/react'
-import { clsx } from 'clsx'
-import type React from 'react'
+} from '@headlessui/react';
+import { clsx } from 'clsx';
+import type React from 'react';
 
-export function SwitchGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function SwitchGroup({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       data-slot="control"
@@ -22,7 +25,7 @@ export function SwitchGroup({ className, ...props }: React.ComponentPropsWithout
         'has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
       )}
     />
-  )
+  );
 }
 
 export function SwitchField({ className, ...props }: HeadlessFieldProps) {
@@ -49,7 +52,7 @@ export function SwitchField({ className, ...props }: HeadlessFieldProps) {
         '[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
       )}
     />
-  )
+  );
 }
 
 let colors = {
@@ -141,19 +144,17 @@ let colors = {
     '[--switch-bg-ring:theme(colors.rose.600/90%)] [--switch-bg:theme(colors.rose.500)] dark:[--switch-bg-ring:transparent]',
     '[--switch:white] [--switch-ring:theme(colors.rose.600/90%)] [--switch-shadow:theme(colors.rose.900/20%)]',
   ],
-}
+};
 
-type Color = keyof typeof colors
+type Color = keyof typeof colors;
 
 export function Switch({
   color = 'dark/zinc',
   className,
-  children,
   ...props
 }: {
-  color?: Color
-  className?: string
-  children?: React.ReactNode
+  color?: Color;
+  className?: string;
 } & Omit<HeadlessSwitchProps, 'children'>) {
   return (
     <HeadlessSwitch
@@ -190,7 +191,8 @@ export function Switch({
         // Color specific styles
         colors[color],
       )}
-      {...props}>
+      {...props}
+    >
       <span
         aria-hidden="true"
         className={clsx(
@@ -215,5 +217,5 @@ export function Switch({
         )}
       />
     </HeadlessSwitch>
-  )
+  );
 }

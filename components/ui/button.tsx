@@ -1,10 +1,10 @@
 import {
   Button as HeadlessButton,
   type ButtonProps as HeadlessButtonProps,
-} from '@headlessui/react'
-import { clsx } from 'clsx'
-import React from 'react'
-import { Link } from './link'
+} from '@headlessui/react';
+import { clsx } from 'clsx';
+import React from 'react';
+import { Link } from './link';
 
 let styles = {
   base: [
@@ -177,7 +177,7 @@ let styles = {
       '[--btn-icon:theme(colors.rose.300)] data-[active]:[--btn-icon:theme(colors.rose.200)] data-[hover]:[--btn-icon:theme(colors.rose.200)]',
     ],
   },
-}
+};
 
 type ButtonProps = (
   | { color?: keyof typeof styles.colors; outline?: never; plain?: never }
@@ -186,7 +186,7 @@ type ButtonProps = (
 ) & { children: React.ReactNode } & (
     | HeadlessButtonProps
     | React.ComponentPropsWithoutRef<typeof Link>
-  )
+  );
 
 export const Button = React.forwardRef(function Button(
   { color, outline, plain, className, children, ...props }: ButtonProps,
@@ -198,20 +198,28 @@ export const Button = React.forwardRef(function Button(
     outline
       ? styles.outline
       : plain
-      ? styles.plain
-      : clsx(styles.solid, styles.colors[color ?? 'dark/zinc']),
-  )
+        ? styles.plain
+        : clsx(styles.solid, styles.colors[color ?? 'dark/zinc']),
+  );
 
   return 'href' in props ? (
-    <Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
+    <Link
+      {...props}
+      className={classes}
+      ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+    >
       <TouchTarget>{children}</TouchTarget>
     </Link>
   ) : (
-    <HeadlessButton {...props} className={clsx(classes, 'cursor-default')} ref={ref}>
+    <HeadlessButton
+      {...props}
+      className={clsx(classes, 'cursor-default')}
+      ref={ref}
+    >
       <TouchTarget>{children}</TouchTarget>
     </HeadlessButton>
-  )
-})
+  );
+});
 
 /* Expand the hit area to at least 44×44px on touch devices */
 export function TouchTarget({ children }: { children: React.ReactNode }) {
@@ -223,5 +231,5 @@ export function TouchTarget({ children }: { children: React.ReactNode }) {
         aria-hidden="true"
       />
     </>
-  )
+  );
 }
