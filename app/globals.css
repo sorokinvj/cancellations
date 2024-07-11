@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-accent: theme('colors.accent');
+  --color-neutral: theme('colors.neutral');
+}
+
+@layer components {
+    .html-container h1 {
+      @apply text-3xl uppercase mb-4 ;
+    }
+    .html-container h2 {
+      @apply text-2xl uppercase mb-4 ;
+    }
+    .html-container h3 {
+      @apply font-bold;
+    }
+    .html-container strong {
+      @apply uppercase;
+    }
+    .html-container *:empty {
+      @apply hidden;
+    }
+    .html-container li {
+      @apply mb-4 ml-6 list-disc
+    }
+    .html-container ul {
+      @apply mt-4
+    }
+    .html-container p, .html-container strong {
+      @apply mb-4 
+    }
+  }
