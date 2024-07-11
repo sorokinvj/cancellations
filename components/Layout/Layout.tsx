@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
 import { auth } from '@/firebase/config';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import Login from '../Login/Login';
 
 const SidebarButton: React.FC<{
   link: string;
@@ -71,6 +72,10 @@ export default function ClientLayout({
     await signOut(auth);
     router.push('/login');
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <>
@@ -152,7 +157,7 @@ export default function ClientLayout({
           </div>
         </div>
         <div className="col-start-2 row-span-2 row-start-1 overflow-hidden">
-          {user ? <main>{children}</main> : null}
+          <main>{children}</main>
         </div>
       </div>
     </>
