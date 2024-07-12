@@ -7,7 +7,7 @@ import React from 'react';
 import { Link } from './link';
 import Spinner from '@/components/ui/spinner';
 
-let styles = {
+const styles = {
   base: [
     // Base
     'relative isolate inline-flex items-center justify-center gap-x-2 rounded-lg border text-base/6 font-semibold',
@@ -186,7 +186,8 @@ type ButtonProps = (
   | { color?: never; outline?: never; plain: true }
 ) & {
   children: React.ReactNode;
-  loading?: boolean; // Adding the loading property here.
+  loading?: boolean;
+  disabled?: boolean;
 } & (HeadlessButtonProps | React.ComponentPropsWithoutRef<typeof Link>);
 
 export const Button = React.forwardRef(function Button(
@@ -197,11 +198,12 @@ export const Button = React.forwardRef(function Button(
     className,
     children,
     loading,
+    disabled,
     ...props
   }: ButtonProps,
   ref: React.ForwardedRef<HTMLElement>,
 ) {
-  let classes = clsx(
+  const classes = clsx(
     className,
     styles.base,
     outline
@@ -209,28 +211,31 @@ export const Button = React.forwardRef(function Button(
       : plain
         ? styles.plain
         : clsx(styles.solid, styles.colors[color ?? 'dark/zinc']),
+    disabled && 'opacity-50 cursor-not-allowed',
   );
 
   const content = loading ? (
     <Spinner color="white" />
   ) : (
     <TouchTarget>{children}</TouchTarget>
-  ); // Conditional content based on loading.
+  );
+
+  const commonProps = {
+    className: classes,
+    disabled: disabled || loading,
+  };
 
   return 'href' in props ? (
     <Link
       {...props}
+      {...commonProps}
       className={classes}
       ref={ref as React.ForwardedRef<HTMLAnchorElement>}
     >
       {content}
     </Link>
   ) : (
-    <HeadlessButton
-      {...props}
-      className={clsx(classes, 'cursor-default')}
-      ref={ref}
-    >
+    <HeadlessButton {...props} {...commonProps} ref={ref}>
       {content}
     </HeadlessButton>
   );

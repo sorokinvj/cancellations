@@ -1,5 +1,6 @@
 // components/ui/spinner.tsx
-import React from 'react';
+
+import React, { FC } from 'react';
 
 const spinnerBaseStyle = {
   width: '1.5rem',
@@ -7,9 +8,14 @@ const spinnerBaseStyle = {
   borderWidth: '2px',
 };
 
-const Spinner = ({ color = 'gray-900' }) => (
+interface Props {
+  color?: string;
+  className?: string;
+}
+
+const Spinner: FC<Props> = ({ color = 'gray-900', className }: Props) => (
   <div
-    className="spinner"
+    className={'spinner ' + className}
     aria-label="Loading"
     style={{
       ...spinnerBaseStyle,

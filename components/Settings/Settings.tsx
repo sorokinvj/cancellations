@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, Fieldset, Label } from '@/components/ui/fieldset';
 import { Input } from '@/components/ui/input';
 
-const Settings: React.FC<{}> = () => {
+const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('My Account');
 
   const tabs = [

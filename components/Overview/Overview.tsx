@@ -402,7 +402,7 @@ export const scoreLineChartOptions: ComponentProps<typeof Line>['options'] = {
   },
 };
 
-const Overview: React.FC<{}> = () => {
+const Overview: React.FC = () => {
   const [moreTopLeadsModal, setMoreTopLeadsModal] = useState(false);
   const [topLeadDetailsModal, setTopLeadDetailsModal] = useState(false);
 

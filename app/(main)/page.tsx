@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Overview',
 };
 
-const Page: React.FC<{}> = () => {
+const Page: React.FC = () => {
   return <Overview />;
 };
 

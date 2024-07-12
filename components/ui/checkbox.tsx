@@ -55,7 +55,7 @@ export function CheckboxField({ className, ...props }: HeadlessFieldProps) {
   );
 }
 
-let base = [
+const base = [
   // Basic layout
   'relative isolate flex size-[1.125rem] items-center justify-center rounded-[0.3125rem] sm:size-4',
 
@@ -92,7 +92,7 @@ let base = [
   'dark:forced-colors:[--checkbox-check:HighlightText] dark:forced-colors:[--checkbox-checked-bg:Highlight] dark:forced-colors:group-data-[disabled]:[--checkbox-check:Highlight]',
 ];
 
-let colors = {
+const colors = {
   'dark/zinc': [
     '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.zinc.900)] [--checkbox-checked-border:theme(colors.zinc.950/90%)]',
     'dark:[--checkbox-checked-bg:theme(colors.zinc.600)]',
@@ -123,8 +123,8 @@ let colors = {
   blue: '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.blue.600)] [--checkbox-checked-border:theme(colors.blue.700/90%)]',
   indigo:
     '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.indigo.500)] [--checkbox-checked-border:theme(colors.indigo.600/90%)]',
-  violet:
-    '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.violet.500)] [--checkbox-checked-border:theme(colors.violet.600/90%)]',
+  vioconst:
+    '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.vioconst.500)] [--checkbox-checked-border:theme(colors.vioconst.600/90%)]',
   purple:
     '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.purple.500)] [--checkbox-checked-border:theme(colors.purple.600/90%)]',
   fuchsia:

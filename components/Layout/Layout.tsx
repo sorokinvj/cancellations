@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { IconType } from 'react-icons/lib';
 import { FaChartSimple } from 'react-icons/fa6';
-import { FaPhone, FaCog, FaUser } from 'react-icons/fa';
+import { FaPhone, FaCog, FaUser, FaFileCsv } from 'react-icons/fa';
 import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
 import { auth } from '@/firebase/config';
@@ -113,10 +113,16 @@ export default function ClientLayout({
                   />
                   <SidebarButton
                     link="/data"
-                    label="Call Logs"
+                    label="Requests"
                     Icon={FaPhone}
                     isFullWidth
                     activePaths={['/call-details', '/data-refunds']}
+                  />
+                  <SidebarButton
+                    link="/upload"
+                    label="Upload CSV"
+                    Icon={FaFileCsv}
+                    isFullWidth
                   />
                 </div>
                 <div className="flex flex-col gap-y-2">

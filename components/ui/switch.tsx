@@ -55,7 +55,7 @@ export function SwitchField({ className, ...props }: HeadlessFieldProps) {
   );
 }
 
-let colors = {
+const colors = {
   'dark/zinc': [
     '[--switch-bg-ring:theme(colors.zinc.950/90%)] [--switch-bg:theme(colors.zinc.900)] dark:[--switch-bg-ring:theme(colors.zinc.700/90%)] dark:[--switch-bg-ring:transparent] dark:[--switch-bg:theme(colors.white/25%)]',
     '[--switch-ring:theme(colors.zinc.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white] dark:[--switch-ring:theme(colors.zinc.700/90%)]',
@@ -124,9 +124,9 @@ let colors = {
     '[--switch-bg-ring:theme(colors.indigo.600/90%)] [--switch-bg:theme(colors.indigo.500)] dark:[--switch-bg-ring:transparent]',
     '[--switch:white] [--switch-ring:theme(colors.indigo.600/90%)] [--switch-shadow:theme(colors.indigo.900/20%)]',
   ],
-  violet: [
-    '[--switch-bg-ring:theme(colors.violet.600/90%)] [--switch-bg:theme(colors.violet.500)] dark:[--switch-bg-ring:transparent]',
-    '[--switch:white] [--switch-ring:theme(colors.violet.600/90%)] [--switch-shadow:theme(colors.violet.900/20%)]',
+  vioconst: [
+    '[--switch-bg-ring:theme(colors.vioconst.600/90%)] [--switch-bg:theme(colors.vioconst.500)] dark:[--switch-bg-ring:transparent]',
+    '[--switch:white] [--switch-ring:theme(colors.vioconst.600/90%)] [--switch-shadow:theme(colors.vioconst.900/20%)]',
   ],
   purple: [
     '[--switch-bg-ring:theme(colors.purple.600/90%)] [--switch-bg:theme(colors.purple.500)] dark:[--switch-bg-ring:transparent]',

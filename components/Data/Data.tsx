@@ -7,7 +7,6 @@ import * as Headless from '@headlessui/react';
 import {
   FaAngleLeft,
   FaAngleRight,
-  FaChevronDown,
   FaFileCsv,
   FaFilter,
   FaPaperPlane,
@@ -35,7 +34,7 @@ import { Radio } from '@/components/ui/radio';
 import { refundDummyDataDefault } from '@/mocks/data';
 import { FaCheckCircle } from 'react-icons/fa';
 
-const Refunds: React.FC = () => {
+const Requests: React.FC = () => {
   // State declarations
   const [dateRangePickerValue, setDateRangePickerValue] =
     useState<DateRangePickerValue>({});
@@ -61,15 +60,7 @@ const Refunds: React.FC = () => {
           <div className="flex h-[72px] flex-none items-center gap-2 border-b bg-white px-[20px]">
             {/* <div className="text-[24px] font-medium">{title}</div> */}
             <Menu as="div" className="relative inline-block text-left">
-              <Menu.Button className="flex items-center rounded-full text-[24px] font-medium hover:text-gray-600 focus:outline-none">
-                {/* <img
-                  src={'/faces/blank-profile-picture.png'}
-                  className="mr-2 h-8 w-8 rounded-full border text-gray-600 shadow-sm"
-                  aria-hidden="true"
-                /> */}
-                <span className="truncate">Refunds</span>
-                <FaChevronDown className="ml-2 h-3 w-5" aria-hidden="true" />
-              </Menu.Button>
+              <h1 className="truncate">Requests</h1>
 
               <Transition
                 as={Fragment}
@@ -548,4 +539,4 @@ const Refunds: React.FC = () => {
   );
 };
 
-export default Refunds;
+export default Requests;
