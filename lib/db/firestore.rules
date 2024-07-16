@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUserInTenant(tenantId) {
+      return isAuthenticated() && request.auth.token.tenantId == tenantId;
+    }
+
+    function isProvider() {
+      return isAuthenticated() && request.auth.token.tenantType == 'provider';
+    }
+
+    function isProxy() {
+      return isAuthenticated() && request.auth.token.tenantType == 'proxy';
+    }
+
+    match /tenants/{tenantId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only allow administrative writes
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isUserInTenant(resource.data.tenantId));
+      allow write: if false; // Only allow administrative writes
+    }
+
+    match /requests/{requestId} {
+      allow create: if isProxy();
+      allow read: if isUserInTenant(resource.data.proxyTenantId) || (isProvider() && resource.data.providerTenantId == request.auth.token.tenantId);
+      allow update: if isProvider() && resource.data.providerTenantId == request.auth.token.tenantId;
+      allow delete: if false; // Prevent deletions
+    }
+  }
+}

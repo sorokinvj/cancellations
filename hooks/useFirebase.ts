@@ -1,13 +1,6 @@
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { useState } from 'react';
-import { database } from '../firebase/config';
+import { database } from '../lib/firebase/config';
 
 const useFirebase = () => {
   const [firebaseError, setFirebaseError] = useState<unknown>(null);

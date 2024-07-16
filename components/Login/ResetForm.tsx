@@ -7,7 +7,7 @@ import {
   confirmPasswordReset,
   verifyPasswordResetCode,
 } from 'firebase/auth';
-import { auth } from '@/firebase/config';
+import { auth } from '@/lib/firebase/config';
 import { useSearchParams } from 'next/navigation';
 
 const ResetForm: React.FC = () => {

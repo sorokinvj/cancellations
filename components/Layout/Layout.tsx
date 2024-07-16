@@ -9,8 +9,8 @@ import { FaChartSimple } from 'react-icons/fa6';
 import { FaPhone, FaCog, FaUser, FaFileCsv } from 'react-icons/fa';
 import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
-import { auth } from '@/firebase/config';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase/config';
 
 const SidebarButton: React.FC<{
   link: string;
@@ -90,9 +90,9 @@ export default function ClientLayout({
         >
           <div className="flex grow flex-col border-r border-gray-200 bg-white px-6">
             <img
-              src="/images/proxz.png"
-              className="mt-4 w-[100px]"
-              alt="Proxz logo"
+              src="/images/Logo.png"
+              className="w-60 mt-6 mb-4"
+              alt="Intermediary logo"
             />
 
             <nav className="mt-3 flex flex-1 flex-col">

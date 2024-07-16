@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Checkbox, CheckboxField } from '@/components/ui/checkbox';
 import Link from 'next/link';
 import { Label } from '@/components/ui/fieldset';
-import { auth } from '@/firebase/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase/config';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');

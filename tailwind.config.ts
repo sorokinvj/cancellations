@@ -1,6 +1,6 @@
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
 
-module.exports = {
+const config = {
   mode: 'jit',
   darkMode: 'class',
   content: [
@@ -171,3 +171,5 @@ module.exports = {
     },
   ],
 };
+
+export default config;
