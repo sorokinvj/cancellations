@@ -1,6 +1,6 @@
+import { UploadCSVProvider } from '@/components/UploadCSV/UploadCSVProvider/UploadCSVProvider';
 import { Metadata } from 'next';
-import { CreateBatch } from '@/components/UploadCSV/CreateBatch/CreateBatch';
-import { UploadBatchProvider } from '@/components/UploadCSV/UploadBatchProvider/UploadBatchProvider';
+import UploadCSV from '@/components/UploadCSV/UploadCSV';
 
 export const metadata: Metadata = {
   title: 'Upload CSV',
@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function UploadPage() {
   return (
-    <UploadBatchProvider>
-      <CreateBatch />;
-    </UploadBatchProvider>
+    <UploadCSVProvider>
+      <UploadCSV />;
+    </UploadCSVProvider>
   );
 }

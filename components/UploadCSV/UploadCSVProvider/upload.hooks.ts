@@ -1,14 +1,10 @@
 'use client';
 import { useContext } from 'react';
-import {
-  CSVResponse,
-  BATCH_UPLOAD_STEPS,
-  BATCH_UPLOAD_ACTION_TYPES,
-} from '../upload.types';
-import { UploadBatchContext } from './UploadBatchProvider';
+import { UPLOAD_ACTION_TYPES, StructuredCSVResponse } from '../upload.types';
+import { UploadCSVContext } from './UploadCSVProvider';
 
-export const useUploadBatch = () => {
-  const context = useContext(UploadBatchContext);
+export const useUpload = () => {
+  const context = useContext(UploadCSVContext);
 
   if (context === null) {
     throw new Error('useUploadBatch must be used within an UploadBatchContext');
@@ -32,39 +28,42 @@ export const useUploadBatch = () => {
    */
 
   const setCsvFormData = (payload: FormData) => {
-    dispatch({ type: BATCH_UPLOAD_ACTION_TYPES.SET_CSV_FORM_DATA, payload });
+    dispatch({ type: UPLOAD_ACTION_TYPES.SET_CSV_FORM_DATA, payload });
   };
 
-  const setUploadStep = (payload: BATCH_UPLOAD_STEPS) => {
-    dispatch({ type: BATCH_UPLOAD_ACTION_TYPES.SET_STEP, payload });
-  };
-
-  const setCsvResponse = (payload: CSVResponse) => {
-    dispatch({ type: BATCH_UPLOAD_ACTION_TYPES.SET_CSV_RESPONSE, payload });
+  const setCsvResponse = (payload: StructuredCSVResponse) => {
+    dispatch({ type: UPLOAD_ACTION_TYPES.SET_CSV_RESPONSE, payload });
   };
 
   const setUploadedFilename = (payload: string) => {
     dispatch({
-      type: BATCH_UPLOAD_ACTION_TYPES.SET_UPLOADED_FILENAME,
+      type: UPLOAD_ACTION_TYPES.SET_UPLOADED_FILENAME,
       payload,
     });
   };
 
   const resetCsvFile = () => {
-    dispatch({ type: BATCH_UPLOAD_ACTION_TYPES.RESET_CSV_UPLOAD });
+    dispatch({ type: UPLOAD_ACTION_TYPES.RESET_CSV_UPLOAD });
     dispatch({
-      type: BATCH_UPLOAD_ACTION_TYPES.SET_UPLOADED_FILENAME,
+      type: UPLOAD_ACTION_TYPES.SET_UPLOADED_FILENAME,
       payload: '',
+    });
+  };
+
+  const setSelectedProvider = (payload: string) => {
+    dispatch({
+      type: UPLOAD_ACTION_TYPES.SET_SELECTED_PROVIDER,
+      payload,
     });
   };
 
   return {
     ...state,
     dispatch,
-    setUploadStep,
     setCsvResponse,
     resetCsvFile,
     setUploadedFilename,
     setCsvFormData,
+    setSelectedProvider,
   };
 };

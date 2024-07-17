@@ -1,16 +1,14 @@
 import { FC } from 'react';
-import { useUploadBatch } from '../UploadBatchProvider/upload.hooks';
+import { useUpload } from './UploadCSVProvider/upload.hooks';
 
-export const CreateBatchUploadErrors: FC<{ message?: string }> = ({
-  message,
-}) => {
-  const { csv } = useUploadBatch();
+const UploadErrors: FC<{ message?: string | null }> = ({ message }) => {
+  const { csv } = useUpload();
 
-  const invalidRows = csv?.data.length === 0;
-  const invalidRowsMessage = invalidRows ? 'Invalid row found' : null;
-  const invalidHeaderMessage = csv?.message;
+  const emptyData = csv?.data.length === 0;
+  const invalidRowsMessage = emptyData ? 'Invalid row found' : null;
+  const invalidHeaderMessage = csv?.error ?? null;
   const hasFieldsError =
-    invalidRowsMessage !== null || invalidHeaderMessage !== undefined;
+    invalidRowsMessage !== null || invalidHeaderMessage !== null;
 
   if (!message && !hasFieldsError) return null;
 
@@ -25,3 +23,5 @@ export const CreateBatchUploadErrors: FC<{ message?: string }> = ({
     </div>
   );
 };
+
+export default UploadErrors;

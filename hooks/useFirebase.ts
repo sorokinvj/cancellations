@@ -1,69 +1,72 @@
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { useState } from 'react';
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
+import { useCallback, useEffect, useState } from 'react';
 import { database } from '../lib/firebase/config';
 
-const useFirebase = () => {
-  const [firebaseError, setFirebaseError] = useState<unknown>(null);
-  const [firebaseLoading, setFirebaseLoading] = useState(false);
+interface FilterOptions {
+  collectionName: string;
+  filterBy?: string;
+  filterValue?: string;
+}
 
-  const getUserData = async (email: string) => {
-    setFirebaseLoading(true);
+const useFirebase = ({
+  collectionName,
+  filterBy,
+  filterValue,
+}: FilterOptions) => {
+  const [error, setError] = useState<unknown>(null);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<DocumentData[] | null>(null);
+
+  const getCollection = useCallback(async () => {
+    setLoading(true);
     try {
-      const docRef = doc(database, 'users', email);
-      const docSnapshot = await getDoc(docRef);
-      const data = docSnapshot.data();
-      return data;
-    } catch (error: unknown) {
-      console.error('Error reading document: ', error);
-      setFirebaseError(error);
-    } finally {
-      setFirebaseLoading(false);
-    }
-  };
+      const collectionRef = collection(database, collectionName);
+      let q = query(collectionRef);
 
-  const checkIfAdmin = async (email: string) => {
-    setFirebaseLoading(true);
-    try {
-      const docRef = doc(database, 'users', email);
-      const docSnapshot = await getDoc(docRef);
+      if (filterBy && filterValue) {
+        q = query(q, where(filterBy, '==', filterValue));
+      }
 
-      const data = docSnapshot.data();
-      const isAdmin = Boolean(data?.isAdmin);
+      const snapshot = await getDocs(q);
+      const fetchedData = snapshot.docs
+        .map(doc => doc.data())
+        .filter(doc => {
+          // Filter out documents that only have {_init: true}
+          if (Object.keys(doc).length === 1 && doc._init === true) {
+            return false;
+          }
+          return true;
+        });
 
-      return isAdmin;
+      return fetchedData;
     } catch (error) {
       console.error('Error reading document: ', error);
-      setFirebaseError(error);
-      return false;
+      setError(error);
+      return null;
     } finally {
-      setFirebaseLoading(false);
+      setLoading(false);
     }
-  };
+  }, [collectionName, filterBy, filterValue]);
 
-  const getUsers = async () => {
-    setFirebaseLoading(true);
-    try {
-      const usersCollectionRef = collection(database, 'users');
-      const usersSnapshot = await getDocs(usersCollectionRef);
-
-      const userIds = usersSnapshot.docs.map(doc => doc.id);
-      const data = usersSnapshot.docs.map(doc => doc.data());
-      return { userIds, data };
-    } catch (error) {
-      console.error('Error reading document: ', error);
-      setFirebaseError(error);
-      return { userIds: null, data: null };
-    } finally {
-      setFirebaseLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getCollection();
+      setData(data);
+    };
+    fetchData();
+  }, [getCollection]);
 
   return {
-    firebaseError,
-    firebaseLoading,
-    getUserData,
-    getUsers,
-    checkIfAdmin,
+    error,
+    loading,
+    getCollection,
+    data,
   };
 };
 

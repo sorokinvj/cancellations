@@ -4,16 +4,17 @@ import { Upload } from 'lucide-react';
 import { FileUploader } from 'react-drag-drop-files';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
-// import { CreateBatchTable } from './CreateBatchTable';
-import { CreateBatchUploadErrors } from './CreateBatchUploadErrors';
-import { useUploadBatch } from '../UploadBatchProvider/upload.hooks';
+import { useUpload } from './UploadCSVProvider/upload.hooks';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/components/ui/link';
 import { Text } from '@/components/ui/text';
 import Spinner from '@/components/ui/spinner';
-import { CSVResponse } from '../upload.types';
 
-export const CreateBatchUploadStep: FC = () => {
+import UploadErrors from './UploadErrors';
+import { SelectItem, Select as SelectTremor } from '@tremor/react';
+import useFirebase from '@/hooks/useFirebase';
+
+const FileUpload: FC = () => {
   const {
     csv,
     filename,
@@ -21,14 +22,20 @@ export const CreateBatchUploadStep: FC = () => {
     resetCsvFile,
     setUploadedFilename,
     setCsvFormData,
-  } = useUploadBatch();
+    setSelectedProvider,
+    selectedProviderId,
+  } = useUpload();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [uploadError, setUploadError] = useState<string | undefined>();
 
-  const hasValidationError = csv?.status === 'failed';
-  const csvValidationErrorMessage = hasValidationError
-    ? csv?.message
-    : undefined;
+  const hasValidationError = csv?.status === 'error';
+  const csvValidationErrorMessage = hasValidationError ? csv?.error : undefined;
+
+  const { data: providersData, loading: providersLoading } = useFirebase({
+    collectionName: 'tenants',
+    filterBy: 'type',
+    filterValue: 'provider',
+  });
 
   const deleteFile = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -49,17 +56,13 @@ export const CreateBatchUploadStep: FC = () => {
       formData.append('file', file);
       setCsvFormData(formData);
 
-      const response = await axios.post<CSVResponse>('/api/upload', formData, {
+      const response = await axios.post('/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      console.log('response', response);
-
       setCsvResponse(response.data);
     } catch (error) {
-      console.log('catch error', error);
       if (axios.isAxiosError(error) && error.response) {
         setUploadError(error.response.data.message);
       } else {
@@ -70,14 +73,27 @@ export const CreateBatchUploadStep: FC = () => {
     }
   };
 
-  console.log('csv', csv);
-
-  const headers = csv?.data[0] as string[];
-  const rows = csv?.data.slice(1) as string[][];
+  const handleSelectProvider = (value: string) => {
+    setSelectedProvider(value);
+  };
 
   return (
-    <div className="p-4 max-w-xl w-full">
+    <div className="max-w-xl w-full">
       <div className="bg-gray-50 p-6 rounded-lg shadow flex flex-col gap-4">
+        <SelectTremor
+          enableClear={false}
+          className="z-30 w-52"
+          defaultValue="1"
+          disabled={providersLoading}
+          placeholder="Select a provider"
+          onValueChange={handleSelectProvider}
+        >
+          {providersData?.map(tenant => (
+            <SelectItem value={tenant.id} key={tenant.id}>
+              {tenant.name}
+            </SelectItem>
+          ))}
+        </SelectTremor>
         <Text>
           Upload a CSV file with the refund data. Make sure your CSV file
           follows the required format.{' '}
@@ -111,7 +127,12 @@ export const CreateBatchUploadStep: FC = () => {
               </div>
             ) : (
               <div className="w-full flex items-center justify-center">
-                <Button disabled={isLoading} className="justify-center">
+                <Button
+                  disabled={
+                    isLoading || providersLoading || !selectedProviderId
+                  }
+                  className="justify-center"
+                >
                   {isLoading ? (
                     <Spinner className="mr-2" />
                   ) : (
@@ -123,26 +144,10 @@ export const CreateBatchUploadStep: FC = () => {
             )}
           </div>
         </FileUploader>
-        <CreateBatchUploadErrors
-          message={uploadError ?? csvValidationErrorMessage}
-        />
+        <UploadErrors message={uploadError ?? csvValidationErrorMessage} />
       </div>
-      {csv?.data?.length && (
-        <table>
-          <thead>
-            <tr>
-              {headers?.map((header: string) => <th key={header}>{header}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {row?.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
     </div>
   );
 };
+
+export default FileUpload;

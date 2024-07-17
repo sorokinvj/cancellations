@@ -1,10 +1,10 @@
 // file: app/api/upload/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { CsvError, parse } from 'csv-parse';
-import { CSVResponse } from '@/components/UploadCSV/upload.types';
+import { StructuredCSVResponse } from '@/components/UploadCSV/upload.types';
 
 const CSV_DELIMITER = [',', ';', '|', ':', '\t'];
-const MAX_NUMBER_OR_ROWS = 500;
+const MAX_NUMBER_OF_ROWS = 500;
 
 export async function POST(request: NextRequest): Promise<void | Response> {
   try {
@@ -12,12 +12,15 @@ export async function POST(request: NextRequest): Promise<void | Response> {
     const file = formData.get('file') as File;
 
     if (!file) {
-      return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'No file uploaded.', status: 'error', headers: [], data: [] },
+        { status: 400 },
+      );
     }
 
     if (file.type !== 'text/csv') {
       return NextResponse.json(
-        { error: 'Invalid file type.' },
+        { error: 'Invalid file type.', status: 'error', headers: [], data: [] },
         { status: 400 },
       );
     }
@@ -30,46 +33,80 @@ export async function POST(request: NextRequest): Promise<void | Response> {
         .on('data', data => results.push(data))
         .on('error', err => {
           if (err instanceof CsvError) {
-            const response: CSVResponse = {
-              status: 'failed',
-              message: `Row ${err?.records} contains invalid amount of columns. There might be a typo with an extra delimiter in one of the cells.`,
+            const response: StructuredCSVResponse = {
+              status: 'error',
+              error: `Row ${err?.records} contains invalid amount of columns. There might be a typo with an extra delimiter in one of the cells.`,
+              headers: [],
               data: [],
             };
-            resolve(NextResponse.json(response, { status: 500 }));
-          } else {
-            resolve(NextResponse.json({ error: err.message }, { status: 500 }));
+            return resolve(NextResponse.json(response, { status: 500 }));
           }
+          return resolve(
+            NextResponse.json(
+              {
+                status: 'error',
+                error: err.message,
+                headers: [],
+                data: [],
+              },
+              { status: 500 },
+            ),
+          );
         })
         .on('end', () => {
           if (results.length <= 1) {
-            resolve(
+            return resolve(
               NextResponse.json(
                 {
-                  status: 'failed',
-                  message:
+                  status: 'error',
+                  error:
                     'The file uploaded does not contain any data, please check the file and try again.',
+                  headers: [],
+                  data: [],
                 },
                 { status: 400 },
               ),
             );
-          } else if (results.length > MAX_NUMBER_OR_ROWS) {
-            resolve(
+          }
+          if (results.length > MAX_NUMBER_OF_ROWS + 1) {
+            return resolve(
               NextResponse.json(
                 {
-                  status: 'failed',
-                  message: `Please ensure your file has ${MAX_NUMBER_OR_ROWS} rows or fewer and try again.`,
+                  status: 'error',
+                  error: `Please ensure your file has ${MAX_NUMBER_OF_ROWS} rows or fewer and try again.`,
+                  headers: [],
+                  data: [],
                 },
                 { status: 400 },
               ),
             );
-          } else {
-            resolve(NextResponse.json({ status: 'success', data: results }));
           }
+          const headers = results[0];
+          const data = results.slice(1).map(row => {
+            const rowData: Record<string, string> = {};
+            headers.forEach((header, index) => {
+              rowData[header] = row[index] || '';
+            });
+            return rowData;
+          });
+
+          const response: StructuredCSVResponse = {
+            status: 'success',
+            error: null,
+            headers,
+            data,
+          };
+          return resolve(NextResponse.json(response, { status: 200 }));
         });
     });
   } catch (err) {
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      {
+        status: 'error',
+        error: 'An unexpected error occurred',
+        headers: [],
+        data: [],
+      },
       { status: 500 },
     );
   }
