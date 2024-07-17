@@ -35,7 +35,7 @@ export const useUpload = () => {
     dispatch({ type: UPLOAD_ACTION_TYPES.SET_CSV_RESPONSE, payload });
   };
 
-  const setUploadedFilename = (payload: string) => {
+  const setUploadedFilename = (payload: string | undefined) => {
     dispatch({
       type: UPLOAD_ACTION_TYPES.SET_UPLOADED_FILENAME,
       payload,
@@ -50,7 +50,7 @@ export const useUpload = () => {
     });
   };
 
-  const setSelectedProvider = (payload: string) => {
+  const setSelectedProvider = (payload: string | undefined) => {
     dispatch({
       type: UPLOAD_ACTION_TYPES.SET_SELECTED_PROVIDER,
       payload,

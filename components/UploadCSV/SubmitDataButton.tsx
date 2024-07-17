@@ -5,6 +5,7 @@ import { database } from '../../lib/firebase/config';
 import { CURRENT_SCHEMA_VERSION, Request } from '../../lib/db/schema';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
 
 const SubmitDataButton = () => {
   const {
@@ -64,8 +65,8 @@ const SubmitDataButton = () => {
 
       setSubmitStatus('success');
       resetCsvFile();
-      setUploadedFilename('');
-      setSelectedProvider('');
+      setUploadedFilename(undefined);
+      setSelectedProvider(undefined);
     } catch (error) {
       console.error('Error submitting data:', error);
       setSubmitStatus('error');
@@ -83,7 +84,7 @@ const SubmitDataButton = () => {
 
   return (
     <div>
-      <button
+      <Button
         onClick={handleSubmit}
         disabled={isDisabled}
         className={`font-bold py-2 px-4 rounded ${
@@ -93,7 +94,7 @@ const SubmitDataButton = () => {
         }`}
       >
         {isSubmitting ? 'Submitting...' : 'Submit Data'}
-      </button>
+      </Button>
       {submitStatus === 'success' && (
         <p className="text-green-500 mt-2">Data submitted successfully!</p>
       )}

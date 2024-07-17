@@ -33,7 +33,7 @@ type SetCsvAction = {
 
 type SetUploadedFilenameAction = {
   type: UPLOAD_ACTION_TYPES.SET_UPLOADED_FILENAME;
-  payload: string;
+  payload?: string;
 };
 
 type ResetCsvAction = {
@@ -47,7 +47,7 @@ type SetCsvFormDataAction = {
 
 type SetSelectedProviderAction = {
   type: UPLOAD_ACTION_TYPES.SET_SELECTED_PROVIDER;
-  payload: string;
+  payload?: string;
 };
 
 export type BatchUploadAction =
