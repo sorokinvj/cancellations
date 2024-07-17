@@ -1,78 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { IconType } from 'react-icons/lib';
+import React from 'react';
 import { FaChartSimple } from 'react-icons/fa6';
-import { FaPhone, FaCog, FaUser, FaFileCsv } from 'react-icons/fa';
+import { FaPhone, FaCog, FaFileCsv } from 'react-icons/fa';
 import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase/config';
-
-const SidebarButton: React.FC<{
-  link: string;
-  label: string;
-  Icon: IconType;
-  activePaths?: string[];
-  isFullWidth: boolean;
-}> = ({ link, label, Icon, activePaths, isFullWidth }) => {
-  const pathname = usePathname();
-  const isActive =
-    link === pathname ||
-    activePaths?.includes(pathname) ||
-    activePaths?.includes('/' + pathname.split('/')[1]);
-
-  return (
-    <li>
-      <Link href={link}>
-        <div
-          className={clsx(
-            isActive
-              ? 'text-flair-700 bg-flair-100'
-              : 'hover:text-flair-700 hover:bg-flair-50 text-gray-700',
-            'text-md group flex items-center gap-x-3 rounded-md p-2 font-semibold',
-          )}
-        >
-          <div className="flex h-7 w-7 items-center justify-center">
-            <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-          </div>
-          {isFullWidth && <>{label}</>}
-        </div>
-      </Link>
-    </li>
-  );
-};
+import { useAuth } from '@/hooks/useAuth';
+import Profile from '../Profile/Profile';
+import SidebarButton from '../SidebarButton/SidebarButton';
 
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const [user, setUser] = useState<{ email: string } | null>(null);
-  const [showSignOutButton, setShowSignOutButton] = useState(false);
+  const { loading, userData } = useAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      if (user?.email) {
-        setUser({ email: user.email });
-      } else {
-        router.push('/login');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    router.push('/login');
-  };
-
-  if (!user) {
+  if (loading || !userData) {
     return null;
   }
 
@@ -109,20 +53,18 @@ export default function ClientLayout({
                       '/overview-customer-support',
                       '/overview-refunds',
                     ]}
-                    isFullWidth
                   />
                   <SidebarButton
                     link="/data"
                     label="Requests"
                     Icon={FaPhone}
-                    isFullWidth
                     activePaths={['/call-details', '/data-refunds']}
                   />
                   <SidebarButton
                     link="/upload"
                     label="Upload CSV"
                     Icon={FaFileCsv}
-                    isFullWidth
+                    hideButton={userData?.tenantType === 'provider'}
                   />
                 </div>
                 <div className="flex flex-col gap-y-2">
@@ -130,32 +72,8 @@ export default function ClientLayout({
                     link="/settings"
                     label="Settings"
                     Icon={FaCog}
-                    isFullWidth
                   />
-                  {user && (
-                    <li className="relative">
-                      <button
-                        className="relative text-md group flex items-center gap-x-3 rounded-md p-2 font-semibold text-gray-700 hover:text-flair-700 focus:outline-none"
-                        onClick={() => setShowSignOutButton(!showSignOutButton)}
-                      >
-                        <FaUser
-                          className="h-6 w-6 shrink-0"
-                          aria-hidden="true"
-                        />
-                        {user?.email}
-                      </button>
-                      {showSignOutButton && (
-                        <div className="absolute right-0 bottom-6 w-full bg-white border border-gray-200 rounded-md shadow-lg py-1">
-                          <button
-                            onClick={handleSignOut}
-                            className="block w-full text-left px-4 py-2 text-md text-gray-700 hover:bg-flair-50 hover:text-flair-700"
-                          >
-                            Sign out
-                          </button>
-                        </div>
-                      )}
-                    </li>
-                  )}
+                  {userData && <Profile />}
                 </div>
               </ul>
             </nav>

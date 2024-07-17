@@ -1,5 +1,4 @@
 // lib/firebase/admin.ts
-
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 
 export function initializeFirebaseAdmin() {
@@ -14,11 +13,6 @@ export function initializeFirebaseAdmin() {
   if (!process.env.FIREBASE_PRIVATE_KEY) {
     throw new Error('FIREBASE_PRIVATE_KEY is not set');
   }
-
-  console.log(
-    'Initializing Firebase Admin with project ID:',
-    process.env.FIREBASE_PROJECT_ID,
-  );
 
   if (getApps().length === 0) {
     initializeApp({

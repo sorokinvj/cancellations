@@ -3,15 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Checkbox, CheckboxField } from '@/components/ui/checkbox';
 import Link from 'next/link';
 import { Label } from '@/components/ui/fieldset';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase/config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const router = useRouter();
 
@@ -19,11 +20,37 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      // Get the ID token
+      const idToken = await userCredential.user.getIdToken();
+
+      // Send the ID token to our API to create a session cookie
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create session');
+      }
+
       setLoading(false);
+      setError('');
       router.push('/');
     } catch (error) {
       console.error('Error signing in:', error);
+      setError('Invalid email or password or session creation failed.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,12 +128,7 @@ const LoginForm: React.FC = () => {
           >
             Login with Email
           </Button>
-          <p className="text-sm font-light text-gray-500">
-            Don’t have an account yet?{' '}
-            <span className="text-flair-600 font-medium hover:underline">
-              <Link href={'#'}>Sign Up</Link>
-            </span>
-          </p>
+          {error && <p className="text-sm font-light text-red-500">{error}</p>}
         </form>
       </div>
     </div>

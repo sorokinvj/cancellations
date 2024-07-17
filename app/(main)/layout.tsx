@@ -1,3 +1,4 @@
+// file: app/(main)/layout.tsx
 import React from 'react';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/Layout/Layout';
@@ -12,11 +13,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body>
-        <ClientLayout>{children}</ClientLayout>
-      </body>
-    </html>
-  );
+  return <ClientLayout>{children}</ClientLayout>;
 }
