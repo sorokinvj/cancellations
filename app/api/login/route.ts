@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
+    console.error('Error creating session:', error);
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 }
