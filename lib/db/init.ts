@@ -1,18 +1,16 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import { initializeFirebaseAdmin } from '../firebase/admin';
+const app = initializeFirebaseAdmin();
 
 import { getFirestore } from 'firebase-admin/firestore';
 import { collections, CURRENT_SCHEMA_VERSION, Tenant, User } from './schema';
 import { getAuth } from 'firebase-admin/auth';
-import { initializeFirebaseAdmin } from '../firebase/admin';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function initializeDatabase() {
   try {
-    console.log('Initializing Firebase Admin...');
-    initializeFirebaseAdmin();
-    console.log('Firebase Admin initialized successfully');
-
-    const db = getFirestore();
+    const db = getFirestore(app);
     console.log('Firestore instance obtained');
 
     // Test connection
@@ -24,26 +22,11 @@ export async function initializeDatabase() {
       console.log('Connected to Firestore, but test document does not exist');
     }
 
-    // Create collections if they don't exist
-    await createCollections(db);
-
     // Initialize test data
     await initializeTestData(db);
   } catch (error) {
     console.error('Error in initializeDatabase:', error);
     throw error;
-  }
-}
-
-async function createCollections(db: FirebaseFirestore.Firestore) {
-  // Create collections if they don't exist
-  for (const collectionName of Object.values(collections)) {
-    const collection = db.collection(collectionName);
-    const doc = await collection.limit(1).get();
-    if (doc.empty) {
-      await collection.add({ _init: true });
-      console.log(`Collection ${collectionName} created.`);
-    }
   }
 }
 
@@ -53,7 +36,7 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
   // Create test tenants
   const tenants: Tenant[] = [
     {
-      id: 'rocket-money',
+      id: uuidv4(),
       name: 'RocketMoney',
       type: 'proxy',
       createdAt: new Date(),
@@ -61,7 +44,7 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
       version: CURRENT_SCHEMA_VERSION,
     },
     {
-      id: 'billshark',
+      id: uuidv4(),
       name: 'BillShark',
       type: 'proxy',
       createdAt: new Date(),
@@ -69,8 +52,16 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
       version: CURRENT_SCHEMA_VERSION,
     },
     {
-      id: 'espn',
+      id: uuidv4(),
       name: 'ESPN',
+      type: 'provider',
+      createdAt: new Date(),
+      active: true,
+      version: CURRENT_SCHEMA_VERSION,
+    },
+    {
+      id: uuidv4(),
+      name: 'Netflix',
       type: 'provider',
       createdAt: new Date(),
       active: true,
@@ -85,10 +76,10 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
   // Create test users
   const users: User[] = [
     {
-      id: 'proxy1',
+      id: uuidv4(),
       email: 'proxy1@proxy.com',
       name: 'Bubba Gump',
-      tenantId: 'rocket-money',
+      tenantId: tenants[0].id,
       tenantName: 'RocketMoney',
       tenantType: 'proxy',
       role: 'user',
@@ -97,10 +88,10 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
       version: CURRENT_SCHEMA_VERSION,
     },
     {
-      id: 'proxy2',
+      id: uuidv4(),
       email: 'proxy2@proxy.com',
       name: 'Daisy Duke',
-      tenantId: 'rocket-money',
+      tenantId: tenants[0].id,
       tenantName: 'RocketMoney',
       tenantType: 'proxy',
       role: 'user',
@@ -109,10 +100,10 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
       version: CURRENT_SCHEMA_VERSION,
     },
     {
-      id: 'proxy3',
+      id: uuidv4(),
       email: 'proxy3@proxy.com',
       name: 'Cletus Spuckler',
-      tenantId: 'billshark',
+      tenantId: tenants[1].id,
       tenantName: 'BillShark',
       tenantType: 'proxy',
       role: 'user',
@@ -121,11 +112,23 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
       version: CURRENT_SCHEMA_VERSION,
     },
     {
-      id: 'provider1',
+      id: uuidv4(),
       email: 'provider1@provider.com',
       name: 'Coach Bear Bryant',
-      tenantId: 'espn',
+      tenantId: tenants[2].id,
       tenantName: 'ESPN',
+      tenantType: 'provider',
+      role: 'user',
+      createdAt: new Date(),
+      lastLogin: null,
+      version: CURRENT_SCHEMA_VERSION,
+    },
+    {
+      id: uuidv4(),
+      email: 'provider2@provider.com',
+      name: 'Peter Parker',
+      tenantId: tenants[3].id,
+      tenantName: 'Netflix',
       tenantType: 'provider',
       role: 'user',
       createdAt: new Date(),
@@ -150,6 +153,7 @@ async function initializeTestData(db: FirebaseFirestore.Firestore) {
       await auth.setCustomUserClaims(userRecord.uid, {
         tenantId: user.tenantId,
         tenantType: user.tenantType,
+        tenantName: user.tenantName,
         role: user.role,
       });
 

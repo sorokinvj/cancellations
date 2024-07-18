@@ -15,7 +15,7 @@ export function initializeFirebaseAdmin() {
   }
 
   if (getApps().length === 0) {
-    initializeApp({
+    return initializeApp({
       credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
@@ -24,5 +24,6 @@ export function initializeFirebaseAdmin() {
     });
   } else {
     console.log('Firebase Admin already initialized');
+    return getApps()[0];
   }
 }

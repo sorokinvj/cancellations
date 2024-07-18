@@ -43,7 +43,6 @@ const LoginForm: React.FC = () => {
         throw new Error('Failed to create session');
       }
 
-      setLoading(false);
       setError('');
       router.push('/');
     } catch (error) {

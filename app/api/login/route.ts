@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
   try {
     initializeFirebaseAdmin();
     const auth = getAuth();
-
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
     const sessionCookie = await auth.createSessionCookie(idToken, {
       expiresIn,
