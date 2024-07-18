@@ -18,7 +18,9 @@ const initializeFirebaseAdmin = () => {
   return getApps()[0];
 };
 
-const deleteAllDocumentsInCollection = async (collectionName: string) => {
+export const deleteAllDocumentsInCollection = async (
+  collectionName: string,
+) => {
   console.log('Initializing Firebase Admin...');
   const app = initializeFirebaseAdmin();
   console.log('Firebase Admin initialized successfully');
