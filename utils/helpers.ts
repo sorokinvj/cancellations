@@ -3,18 +3,33 @@ export const validateEmail = (email: string) => {
   return re.test(email);
 };
 
-export function formatDate(timestamp: number) {
-  const date = new Date(timestamp);
+export const formatDate = (
+  input: number | string,
+  options: { withTime: boolean } = { withTime: true },
+): string => {
+  if (!input) return '-';
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const date = new Date(input);
 
-  const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
-  return formattedDate;
-}
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+
+  const formatOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'America/New_York', // Adjust timezone as needed
+  };
+
+  if (options.withTime) {
+    formatOptions.hour = 'numeric';
+    formatOptions.minute = 'numeric';
+    formatOptions.hour12 = true;
+  }
+
+  return new Intl.DateTimeFormat('en-US', formatOptions).format(date);
+};
 
 export const formatSeconds = (durationInSeconds: number | undefined) => {
   if (!durationInSeconds) return `0 m, 0 s`;

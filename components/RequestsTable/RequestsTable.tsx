@@ -8,8 +8,14 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  Cell,
 } from '@tanstack/react-table';
 import { useAuth } from '@/hooks/useAuth';
+import StatusCell from './StatusCell';
+import RequestTypeCell from './RequestTypeCell';
+import { formatDate } from '@/utils/helpers';
+import { User } from 'lucide-react';
+import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
 
 interface Props {
   requests: Request[];
@@ -34,6 +40,36 @@ interface Props {
 // declineReason: string | null;
 // notes: string | null;
 
+const DateCell = ({ cell }: { cell: Cell<Request, string> }) => {
+  const date = cell.getValue();
+  return formatDate(date);
+};
+
+const UsernameCell = ({ cell }: { cell: Cell<Request, string> }) => {
+  const username = cell.getValue();
+  return (
+    <div className="flex items-center gap-2">
+      <User size={16} className="text-gray-500" />
+      <span>{username}</span>
+    </div>
+  );
+};
+
+const ResolveCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
+  const resolved = cell.getValue();
+
+  return (
+    <RadioGroup defaultValue={resolved ? 'Yes' : 'No'} className="flex gap-4">
+      {['Yes', 'No'].map(value => (
+        <RadioField key={value} className="flex items-center gap-2">
+          <Radio value={value} color="blue" />
+          <label className="text-sm">{value}</label>
+        </RadioField>
+      ))}
+    </RadioGroup>
+  );
+};
+
 const RequestsTable: FC<Props> = ({ requests }) => {
   const { userData } = useAuth();
   const isProviderUser = userData?.tenantType === 'provider';
@@ -49,6 +85,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     {
       header: 'Status',
       accessorKey: 'status',
+      cell: StatusCell,
     },
     {
       header: 'Submitted by',
@@ -57,18 +94,17 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     {
       header: 'Request Type',
       accessorKey: 'requestType',
+      cell: RequestTypeCell,
     },
     {
       header: 'Date Submitted',
       accessorKey: 'dateSubmitted',
+      cell: DateCell,
     },
     {
       header: 'Date Responded',
       accessorKey: 'dateResponded',
-    },
-    {
-      header: 'Proxy Tenant ID',
-      accessorKey: 'proxyTenantId',
+      cell: DateCell,
     },
     ...(isProviderUser
       ? [
@@ -81,6 +117,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     {
       header: 'Customer Name',
       accessorKey: 'customerName',
+      cell: UsernameCell,
     },
     {
       header: 'Customer Email',
@@ -97,6 +134,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     {
       header: 'Successfully Resolved',
       accessorKey: 'successfullyResolved',
+      cell: ResolveCell,
     },
     {
       header: 'Rescue Offer',
@@ -119,7 +157,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
             className="flex items-center whitespace-nowrap"
           >
             <IoIosPaper />
-            Report Selected
+            Report
           </Button>
         </div>
       ),

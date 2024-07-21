@@ -1,7 +1,13 @@
+export type RequestStatus =
+  | 'Pending'
+  | 'Canceled'
+  | 'Declined'
+  | 'Rescue Attempt';
+
 export interface Request {
   id: string;
   version: number;
-  status: 'Pending' | 'Canceled' | 'Declined' | 'Rescue Attempt';
+  status: RequestStatus;
   submittedBy: string;
   requestType: string;
   dateSubmitted: Date;

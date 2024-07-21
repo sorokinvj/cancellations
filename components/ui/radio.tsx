@@ -15,11 +15,8 @@ export function RadioGroup({ className, ...props }: HeadlessRadioGroupProps) {
       {...props}
       className={clsx(
         className,
-
-        // Basic groups
-        'space-y-3 [&_[data-slot=label]]:font-normal',
-
-        // With descriptions
+        'flex gap-4', // Changed from 'space-y-3' to 'flex gap-4'
+        '[&_[data-slot=label]]:font-normal',
         'has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
       )}
     />
