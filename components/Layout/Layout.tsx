@@ -55,7 +55,7 @@ export default function ClientLayout({
                     ]}
                   />
                   <SidebarButton
-                    link="/data"
+                    link="/requests"
                     label="Requests"
                     Icon={FaPhone}
                     activePaths={['/call-details', '/data-refunds']}
