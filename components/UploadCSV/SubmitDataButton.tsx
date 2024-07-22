@@ -6,6 +6,8 @@ import { CURRENT_SCHEMA_VERSION, Request } from '../../lib/db/schema';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
+import { revalidateRequests } from '@/app/actions';
+import { useRouter } from 'next/navigation';
 
 const SubmitDataButton = () => {
   const {
@@ -21,6 +23,7 @@ const SubmitDataButton = () => {
   >('idle');
 
   const { userData } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async () => {
     if (
@@ -67,6 +70,8 @@ const SubmitDataButton = () => {
       resetCsvFile();
       setUploadedFilename(undefined);
       setSelectedProvider(undefined);
+      revalidateRequests();
+      router.push('/requests');
     } catch (error) {
       console.error('Error submitting data:', error);
       setSubmitStatus('error');

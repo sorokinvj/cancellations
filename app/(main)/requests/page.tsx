@@ -6,28 +6,35 @@ import { Request } from '@/lib/db/schema';
 import { getFirestore } from 'firebase-admin/firestore';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Requests',
 };
 
 initializeFirebaseAdmin();
 
-async function getData(
+const getCachedData = async (
   tenantType: string,
   tenantId: string,
-): Promise<Request[]> {
+): Promise<Request[]> => {
   const db = getFirestore();
   const requestsRef = db.collection('requests');
   let query;
+  console.log(
+    `Fetching data for tenantType: ${tenantType}, tenantId: ${tenantId}`,
+  );
 
   if (tenantType === 'proxy') {
     query = requestsRef.where('proxyTenantId', '==', tenantId);
+    console.log(`Query: requests where proxyTenantId == ${tenantId}`);
   } else if (tenantType === 'provider') {
+    console.log(`Query: requests where providerTenantId == ${tenantId}`);
     query = requestsRef.where('providerTenantId', '==', tenantId);
+    console.log(`Query: requests where providerTenantId == ${tenantId}`);
   } else {
     throw new Error('Invalid tenant type');
   }
-
   try {
     const snapshot = await query.get();
 
@@ -45,7 +52,7 @@ async function getData(
     console.error('Error getting requests:', error);
     throw new Error('Error getting requests');
   }
-}
+};
 
 export default async function RequestsPage() {
   const sessionCookie = cookies().get('session')?.value;
@@ -63,7 +70,7 @@ export default async function RequestsPage() {
       throw new Error('Tenant information missing from token');
     }
 
-    const requests = await getData(tenantType, tenantId);
+    const requests = await getCachedData(tenantType, tenantId);
     return <RequestsList requests={requests} />;
   } catch (error) {
     console.error('Error verifying session or fetching data:', error);

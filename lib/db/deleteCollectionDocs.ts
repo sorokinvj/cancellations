@@ -48,7 +48,7 @@ export const deleteAllDocumentsInCollection = async (
   );
 };
 
-const deletAllCollections = async () => {
+export const deletAllCollections = async () => {
   console.log('Initializing Firebase Admin...');
   const app = initializeFirebaseAdmin();
   console.log('Firebase Admin initialized successfully');
@@ -75,8 +75,8 @@ const deletAllCollections = async () => {
 // Self-invoking async function to run the script
 (async () => {
   try {
-    await deletAllCollections();
-    console.log('Deletion completed successfully.');
+    await deleteAllDocumentsInCollection('requests');
+    console.log('Deletion of collection "Requests" completed successfully.');
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error message:', error.message);

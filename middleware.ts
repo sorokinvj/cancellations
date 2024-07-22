@@ -1,20 +1,48 @@
-// file: middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico|login|reset-password).*)',
-  ], // Skip API routes, static files, image files, favicon, login, and reset password routes
-  runtime: 'nodejs', // Specify Node.js runtime
+  ],
 };
 
-export function middleware(request: NextRequest) {
+// Simple in-memory cache
+const verificationCache = new Map<string, number>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+export async function middleware(request: NextRequest) {
   const session = request.cookies.get('session')?.value;
   if (!session) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // If session exists, allow the request to continue
+  const now = Date.now();
+  const cachedTime = verificationCache.get(session);
+
+  // If the session is in cache and not expired, allow the request
+  if (cachedTime && now - cachedTime < CACHE_DURATION) {
+    return NextResponse.next();
+  }
+
+  // Verify the session
+  const verifyResponse = await fetch(
+    new URL('/api/verify-session', request.url),
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ session }),
+    },
+  );
+
+  if (!verifyResponse.ok) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  // Cache the verification result
+  verificationCache.set(session, now);
+
   return NextResponse.next();
 }
