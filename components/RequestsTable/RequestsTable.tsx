@@ -14,8 +14,10 @@ import { useAuth } from '@/hooks/useAuth';
 import StatusCell from './StatusCell';
 import RequestTypeCell from './RequestTypeCell';
 import { formatDate } from '@/utils/helpers';
-import { User } from 'lucide-react';
+import { User, Network } from 'lucide-react';
 import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
+import useFirebase from '@/hooks/useFirebase';
+import Spinner from '../ui/spinner';
 
 interface Props {
   requests: Request[];
@@ -49,7 +51,9 @@ const UsernameCell = ({ cell }: { cell: Cell<Request, string> }) => {
   const username = cell.getValue();
   return (
     <div className="flex items-center gap-2">
-      <User size={16} className="text-gray-500" />
+      <div className="relative flex items-center justify-center w-8 h-8 bg-pink-400 rounded-full">
+        <User size={16} className="text-white" />
+      </div>
       <span>{username}</span>
     </div>
   );
@@ -70,12 +74,31 @@ const ResolveCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
   );
 };
 
+const SourceCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
+  const proxyTenantId = cell.getValue();
+  const { data: proxiesData, loading: proxiesLoading } = useFirebase({
+    collectionName: 'tenants',
+    filterBy: 'type',
+    filterValue: 'proxy',
+  });
+
+  const proxy = proxiesData?.find(proxy => proxy.id === proxyTenantId);
+
+  if (proxiesLoading) return <Spinner className="p-2" />;
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative flex items-center justify-center w-8 h-8 bg-blue-400 rounded-full">
+        <Network size={16} className="text-white" />
+      </div>
+      <span>{proxy?.name}</span>
+    </div>
+  );
+};
+
 const RequestsTable: FC<Props> = ({ requests }) => {
   const { userData } = useAuth();
   const isProviderUser = userData?.tenantType === 'provider';
-  // const { data } = useFirebase({
-  //   collectionName: 'users',
-  // });
 
   const columns = [
     {
@@ -111,6 +134,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
           {
             header: 'Source',
             accessorKey: 'proxyTenantId',
+            cell: SourceCell,
           },
         ]
       : []),

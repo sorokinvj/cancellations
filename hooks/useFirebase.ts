@@ -59,8 +59,10 @@ const useFirebase = ({
       const data = await getCollection();
       setData(data);
     };
-    fetchData();
-  }, [getCollection]);
+    if (!data) {
+      fetchData();
+    }
+  }, [getCollection, data]);
 
   return {
     error,
