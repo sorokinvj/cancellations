@@ -57,7 +57,7 @@ const SubmitDataButton = () => {
           accountNumber: row.accountNumber || '',
           lastFourCCDigits: row.lastFourCCDigits || '',
           notes: null,
-          successfullyResolved: false,
+          successfullyResolved: null,
           rescueOffer: null,
           rescueOfferText: null,
           declineReason: null,

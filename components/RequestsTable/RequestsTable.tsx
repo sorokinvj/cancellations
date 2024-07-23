@@ -2,12 +2,11 @@
 'use client';
 import { FC } from 'react';
 import { Request } from '@/lib/db/schema';
-import { Button } from '@/components/ui/button';
-import { IoIosPaper } from 'react-icons/io';
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  Row,
 } from '@tanstack/react-table';
 import { useAuth } from '@/hooks/useAuth';
 import StatusCell from './StatusCell';
@@ -15,6 +14,7 @@ import RequestTypeCell from './RequestTypeCell';
 
 import { DateCell, SourceCell, UsernameCell, ResolveCell } from './Cell';
 import EmptyRequestsState from './EmptyTable';
+import ReportButton from './ReportButton';
 interface Props {
   requests: Request[];
 }
@@ -22,6 +22,10 @@ interface Props {
 const RequestsTable: FC<Props> = ({ requests }) => {
   const { userData } = useAuth();
   const isProviderUser = userData?.tenantType === 'provider';
+
+  const handleSubmitReport = async (request: Request) => {
+    console.log(request);
+  };
 
   const columns = [
     {
@@ -103,16 +107,11 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       ? [
           {
             id: 'Actions',
-            cell: () => (
-              <div className="flex items-center gap-2">
-                <Button
-                  outline={true}
-                  className="flex items-center whitespace-nowrap"
-                >
-                  <IoIosPaper />
-                  Report
-                </Button>
-              </div>
+            cell: ({ row }: { row: Row<Request> }) => (
+              <ReportButton
+                request={row.original}
+                handleSubmitReport={handleSubmitReport}
+              />
             ),
           },
         ]

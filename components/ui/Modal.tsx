@@ -1,33 +1,48 @@
-import clsx from 'clsx';
-import { FC } from 'react';
+import React from 'react';
+import { X } from 'lucide-react';
+import { Dialog, DialogPanel, Button } from '@tremor/react';
 
-export const Modal: FC<{
+interface ModalProps {
   shown: boolean;
-  onClickBackdrop?: () => void;
-  children?: React.ReactNode;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
   size?: 'sm' | 'md' | 'lg';
-}> = ({ shown, onClickBackdrop, children, size = 'sm' }) => {
+}
+
+const Modal: React.FC<ModalProps> = ({
+  shown,
+  onClose,
+  title,
+  children,
+  footer,
+  size = 'md',
+}) => {
+  const sizeClasses = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+  };
+
   return (
-    <div className={clsx('modal', shown && 'modal-open')}>
-      <div
-        className={clsx(
-          'modal-box relative',
-          size === 'md' && 'w-[1024px] max-w-[95vw]',
-          size === 'lg' && 'w-[1800px] max-w-[95vw]',
-        )}
-      >
-        <div className="bg-flair-600 absolute left-0 top-0 h-[8px] w-full" />
-        {onClickBackdrop && (
-          <button
-            className="btn btn-circle btn-ghost btn-sm absolute right-2 top-5"
-            onClick={onClickBackdrop}
-          >
-            ✕
-          </button>
-        )}
-        {children}
-      </div>
-      <div className="modal-backdrop" onClick={onClickBackdrop} />
-    </div>
+    <Dialog open={shown} onClose={onClose} static={false}>
+      <DialogPanel className={`w-full ${sizeClasses[size]}`}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">{title}</h3>
+          <Button
+            size="xs"
+            variant="light"
+            icon={X}
+            onClick={onClose}
+            color="gray"
+          />
+        </div>
+        <div className="mb-4">{children}</div>
+        {footer && <div className="flex justify-end">{footer}</div>}
+      </DialogPanel>
+    </Dialog>
   );
 };
+
+export default Modal;

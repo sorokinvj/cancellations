@@ -18,7 +18,7 @@ export interface Request {
   customerEmail: string;
   accountNumber: string;
   lastFourCCDigits: string;
-  successfullyResolved: boolean;
+  successfullyResolved: boolean | null;
   rescueOffer: string | null;
   rescueOfferText: string | null;
   declineReason: string | null;
