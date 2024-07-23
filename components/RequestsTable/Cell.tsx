@@ -25,9 +25,9 @@ const UsernameCell = ({ cell }: { cell: Cell<Request, string> }) => {
 
 const ResolveCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
   const resolved = cell.getValue();
-
+  console.log(resolved);
   return (
-    <RadioGroup defaultValue={resolved ? 'Yes' : 'No'} className="flex gap-4">
+    <RadioGroup className="flex gap-4">
       {['Yes', 'No'].map(value => (
         <RadioField key={value} className="flex items-center gap-2">
           <Radio value={value} color="blue" />

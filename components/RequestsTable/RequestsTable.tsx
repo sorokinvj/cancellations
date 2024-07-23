@@ -78,11 +78,15 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       header: 'Last 4 CC Digits',
       accessorKey: 'lastFourCCDigits',
     },
-    {
-      header: 'Successfully Resolved',
-      accessorKey: 'successfullyResolved',
-      cell: ResolveCell,
-    },
+    ...(isProviderUser
+      ? [
+          {
+            header: 'Successfully Resolved',
+            accessorKey: 'successfullyResolved',
+            cell: ResolveCell,
+          },
+        ]
+      : []),
     {
       header: 'Rescue Offer',
       accessorKey: 'rescueOffer',
