@@ -33,6 +33,15 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       accessorKey: 'status',
       cell: StatusCell,
     },
+    ...(isProviderUser
+      ? [
+          {
+            header: 'Source',
+            accessorKey: 'proxyTenantId',
+            cell: SourceCell,
+          },
+        ]
+      : []),
     {
       header: 'Submitted by',
       accessorKey: 'submittedBy',
@@ -52,15 +61,6 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       accessorKey: 'dateResponded',
       cell: DateCell,
     },
-    ...(isProviderUser
-      ? [
-          {
-            header: 'Source',
-            accessorKey: 'proxyTenantId',
-            cell: SourceCell,
-          },
-        ]
-      : []),
     {
       header: 'Customer Name',
       accessorKey: 'customerName',
@@ -99,20 +99,24 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       header: 'Notes',
       accessorKey: 'notes',
     },
-    {
-      id: 'Actions',
-      cell: () => (
-        <div className="flex items-center gap-2">
-          <Button
-            outline={true}
-            className="flex items-center whitespace-nowrap"
-          >
-            <IoIosPaper />
-            Report
-          </Button>
-        </div>
-      ),
-    },
+    ...(isProviderUser
+      ? [
+          {
+            id: 'Actions',
+            cell: () => (
+              <div className="flex items-center gap-2">
+                <Button
+                  outline={true}
+                  className="flex items-center whitespace-nowrap"
+                >
+                  <IoIosPaper />
+                  Report
+                </Button>
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const table = useReactTable({
