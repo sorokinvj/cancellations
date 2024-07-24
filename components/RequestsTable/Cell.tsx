@@ -6,13 +6,19 @@ import useFirebase from '@/hooks/useFirebase';
 import Spinner from '../ui/spinner';
 import { Cell } from '@tanstack/react-table';
 import { Request, RequestStatus } from '@/lib/db/schema';
+import { useFormContext, useController } from 'react-hook-form';
+import { FC } from 'react';
 
-const DateCell = ({ cell }: { cell: Cell<Request, string> }) => {
+type CellProps<R, T> = {
+  cell: Cell<R, T>;
+};
+
+const DateCell: FC<CellProps<Request, string>> = ({ cell }) => {
   const date = cell.getValue();
   return formatDate(date);
 };
 
-const UsernameCell = ({ cell }: { cell: Cell<Request, string> }) => {
+const UsernameCell: FC<CellProps<Request, string>> = ({ cell }) => {
   const username = cell.getValue();
   return (
     <div className="flex items-center gap-2">
@@ -24,22 +30,56 @@ const UsernameCell = ({ cell }: { cell: Cell<Request, string> }) => {
   );
 };
 
-const ResolveCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
-  const resolved = cell.getValue();
+const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
+  cell,
+}) => {
+  const {
+    control,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
+  const cellValue = cell.getValue() as boolean | null;
+
+  const { field } = useController({
+    name: 'successfullyResolved',
+    control,
+    defaultValue: cellValue,
+    rules: { required: 'Please select Yes or No' },
+  });
+
+  const handleChange = (value: string) => {
+    setValue(
+      'successfullyResolved',
+      value === 'Yes' ? true : value === 'No' ? false : null,
+    );
+  };
+
+  const displayValue = field.value === null ? '' : field.value ? 'Yes' : 'No';
 
   return (
-    <RadioGroup className="flex gap-4" defaultValue={resolved ? 'Yes' : 'No'}>
-      {['Yes', 'No'].map(value => (
-        <RadioField key={value} className="flex items-center gap-2">
-          <Radio value={value} color="blue" />
-          <label className="text-sm">{value}</label>
-        </RadioField>
-      ))}
-    </RadioGroup>
+    <div>
+      <RadioGroup
+        className={`flex gap-4 ${errors.successfullyResolved ? 'border border-red-500 p-2 rounded' : ''}`}
+        value={displayValue}
+        onChange={handleChange}
+      >
+        {['Yes', 'No'].map(value => (
+          <RadioField key={value} className="flex items-center gap-2">
+            <Radio value={value} color="blue" />
+            <label className="text-sm">{value}</label>
+          </RadioField>
+        ))}
+      </RadioGroup>
+      {errors.successfullyResolved && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.successfullyResolved.message as string}
+        </p>
+      )}
+    </div>
   );
 };
 
-const SourceCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
+const SourceCell: FC<CellProps<Request, string>> = ({ cell }) => {
   const proxyTenantId = cell.getValue();
   const { data: proxiesData, loading: proxiesLoading } = useFirebase({
     collectionName: 'tenants',
@@ -61,7 +101,7 @@ const SourceCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
   );
 };
 
-const StatusCell = ({ cell }: { cell: Cell<Request, RequestStatus> }) => {
+const StatusCell: FC<CellProps<Request, RequestStatus>> = ({ cell }) => {
   const status = cell.getValue();
   const colorMap = {
     Pending: 'bg-sky-100 text-sky-800',
@@ -79,7 +119,7 @@ const StatusCell = ({ cell }: { cell: Cell<Request, RequestStatus> }) => {
   );
 };
 
-const RequestTypeCell = ({ cell }: { cell: Cell<Request, 'Cancellation'> }) => {
+const RequestTypeCell: FC<CellProps<Request, 'Cancellation'>> = ({ cell }) => {
   const status = cell.getValue();
   const colorMap = {
     Cancellation: 'bg-sky-100 text-sky-800',

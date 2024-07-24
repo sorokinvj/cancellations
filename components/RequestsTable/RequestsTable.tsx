@@ -19,6 +19,7 @@ import {
 } from './Cell';
 import EmptyRequestsState from './EmptyTable';
 import ReportButton from './ReportButton';
+import RequestRow from './Row';
 interface Props {
   requests: Request[];
 }
@@ -153,13 +154,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map(row => (
-            <tr key={row.id} className="border-b border-gray-200">
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className="p-4 whitespace-nowrap">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
+            <RequestRow key={row.id} row={row} />
           ))}
         </tbody>
       </table>

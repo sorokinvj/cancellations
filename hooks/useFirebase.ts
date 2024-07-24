@@ -1,12 +1,16 @@
 import {
   collection,
+  doc,
   DocumentData,
+  FieldValue,
   getDocs,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { useCallback, useEffect, useState } from 'react';
 import { database } from '../lib/firebase/config';
+import { Request } from '@/lib/db/schema';
 
 interface FilterOptions {
   collectionName: string;
@@ -54,6 +58,39 @@ const useFirebase = ({
     }
   }, [collectionName, filterBy, filterValue]);
 
+  const updateFieldInCollection = useCallback(
+    async ({
+      docId,
+      field,
+      value,
+    }: {
+      docId: string;
+      field: string;
+      value: string | number | boolean | null;
+    }) => {
+      try {
+        const collectionRef = collection(database, collectionName);
+        const docRef = doc(collectionRef, docId);
+        await updateDoc(docRef, {
+          [field]: value,
+        });
+      } catch (error) {
+        console.error('Error updating document: ', error);
+      }
+    },
+    [collectionName],
+  );
+
+  const updateRequestDocument = useCallback(async (request: Request) => {
+    try {
+      const requestRef = doc(database, 'requests', request.id);
+      type FirestoreData<T> = { [P in keyof T]: T[P] | FieldValue };
+      await updateDoc(requestRef, request as FirestoreData<Request>);
+    } catch (error) {
+      console.error('Error updating request document: ', error);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await getCollection();
@@ -69,6 +106,8 @@ const useFirebase = ({
     loading,
     getCollection,
     data,
+    updateFieldInCollection,
+    updateRequestDocument,
   };
 };
 
