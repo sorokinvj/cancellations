@@ -9,10 +9,14 @@ import {
   Row,
 } from '@tanstack/react-table';
 import { useAuth } from '@/hooks/useAuth';
-import StatusCell from './StatusCell';
-import RequestTypeCell from './RequestTypeCell';
-
-import { DateCell, SourceCell, UsernameCell, ResolveCell } from './Cell';
+import {
+  DateCell,
+  SourceCell,
+  UsernameCell,
+  ResolveCell,
+  StatusCell,
+  RequestTypeCell,
+} from './Cell';
 import EmptyRequestsState from './EmptyTable';
 import ReportButton from './ReportButton';
 interface Props {

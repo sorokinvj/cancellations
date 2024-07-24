@@ -18,11 +18,11 @@ export interface Request {
   customerEmail: string;
   accountNumber: string;
   lastFourCCDigits: string;
-  successfullyResolved: boolean | null;
-  rescueOffer: string | null;
-  rescueOfferText: string | null;
-  declineReason: string | null;
-  notes: string | null;
+  successfullyResolved: boolean | null; // local changes
+  rescueOffer: string | null; // local changes
+  rescueOfferText: string | null; // local changes
+  declineReason: string | null; // local changes
+  notes: string | null; // local changes
 }
 
 export interface User {

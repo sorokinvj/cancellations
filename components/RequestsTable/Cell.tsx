@@ -1,10 +1,11 @@
+// file: components/RequestsTable/Cell.tsx
 import { formatDate } from '@/utils/helpers';
 import { User, Network } from 'lucide-react';
 import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
 import useFirebase from '@/hooks/useFirebase';
 import Spinner from '../ui/spinner';
 import { Cell } from '@tanstack/react-table';
-import { Request } from '@/lib/db/schema';
+import { Request, RequestStatus } from '@/lib/db/schema';
 
 const DateCell = ({ cell }: { cell: Cell<Request, string> }) => {
   const date = cell.getValue();
@@ -60,4 +61,44 @@ const SourceCell = ({ cell }: { cell: Cell<Request, boolean> }) => {
   );
 };
 
-export { DateCell, UsernameCell, ResolveCell, SourceCell };
+const StatusCell = ({ cell }: { cell: Cell<Request, RequestStatus> }) => {
+  const status = cell.getValue();
+  const colorMap = {
+    Pending: 'bg-sky-100 text-sky-800',
+    Canceled: 'bg-green-100 text-green-800',
+    Declined: 'bg-red-100 text-red-800',
+    'Rescue Attempt': 'bg-amber-100 text-amber-800',
+  };
+
+  return (
+    <span
+      className={`px-2 py-1 rounded-full text-xs font-medium ${colorMap[status]}`}
+    >
+      {status}
+    </span>
+  );
+};
+
+const RequestTypeCell = ({ cell }: { cell: Cell<Request, 'Cancellation'> }) => {
+  const status = cell.getValue();
+  const colorMap = {
+    Cancellation: 'bg-sky-100 text-sky-800',
+  };
+
+  return (
+    <span
+      className={`px-2 py-1 rounded-full text-xs font-medium ${colorMap[status]}`}
+    >
+      {status}
+    </span>
+  );
+};
+
+export {
+  DateCell,
+  UsernameCell,
+  ResolveCell,
+  SourceCell,
+  StatusCell,
+  RequestTypeCell,
+};
