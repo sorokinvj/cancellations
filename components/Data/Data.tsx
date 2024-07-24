@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Modal } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import { Radio } from '@/components/ui/radio';
 import { refundDummyDataDefault } from '@/mocks/data';
 import { FaCheckCircle } from 'react-icons/fa';
@@ -420,9 +420,10 @@ const Requests: React.FC = () => {
       </div>
       <Modal
         shown={isExportCsvShown}
-        onClickBackdrop={() => {
+        onClose={() => {
           setIsExportCsvShown(false);
         }}
+        title="Your CSV is being exported"
       >
         <h3 className="mb-3 text-lg font-bold">Your CSV is being exported</h3>
 
@@ -451,10 +452,11 @@ const Requests: React.FC = () => {
       <Modal
         shown={editNotes}
         size="md"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setEditNotes(false);
         }}
+        title="Edit Notes"
       >
         <div>
           <div className="px-4 sm:px-0">
@@ -509,10 +511,11 @@ const Requests: React.FC = () => {
       <Modal
         shown={sendReportModal}
         size="sm"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setSendReportModal(false);
         }}
+        title="Send Report"
       >
         <div>
           <div className="px-4 sm:px-0">

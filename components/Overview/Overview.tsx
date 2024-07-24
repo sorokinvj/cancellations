@@ -33,7 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Modal } from '@/components/ui/Modal';
+import Modal from '@/components/ui/Modal';
 import {
   DateRangePicker,
   DonutChart,
@@ -457,10 +457,11 @@ const Overview: React.FC = () => {
       <Modal
         shown={topLeadDetailsModal}
         size="md"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setTopLeadDetailsModal(false);
         }}
+        title="Lead Details"
       >
         <div>
           <div className="px-4 sm:px-0">
@@ -563,10 +564,11 @@ const Overview: React.FC = () => {
       <Modal
         shown={moreTopLeadsModal}
         size="md"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setMoreTopLeadsModal(false);
         }}
+        title="Top Leads"
       >
         <h3 className="text-lg font-bold">Top Leads</h3>
         <div className="flex items-center border-b border-b-gray-100 pb-6">
@@ -622,10 +624,11 @@ const Overview: React.FC = () => {
       <Modal
         shown={topAgentDetailsModal}
         size="md"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setTopAgentDetailsModal(false);
         }}
+        title="Agent Details"
       >
         {selectedAgent && (
           <div>
@@ -776,10 +779,11 @@ const Overview: React.FC = () => {
       <Modal
         shown={topMotivationDetailsModal}
         size="md"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setTopMotivationDetailsModal(false);
         }}
+        title="Motivation Details"
       >
         {selectedMotivation && (
           <div>
@@ -886,10 +890,11 @@ const Overview: React.FC = () => {
       <Modal
         shown={topObjectionDetailsModal}
         size="md"
-        onClickBackdrop={() => {
+        onClose={() => {
           // Clear modal
           setTopObjectionDetailsModal(false);
         }}
+        title="Objection Details"
       >
         {selectedObjection && (
           <div>
