@@ -1,5 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
-
+// file: lib/db/schema.ts
 export type RequestStatus =
   | 'Pending'
   | 'Canceled'
@@ -12,8 +11,8 @@ export interface Request {
   status: RequestStatus;
   submittedBy: string;
   requestType: string;
-  dateSubmitted: Timestamp;
-  dateResponded: Timestamp | null;
+  dateSubmitted: string;
+  dateResponded: string | null;
   proxyTenantId: string;
   providerTenantId: string;
   customerName: string;

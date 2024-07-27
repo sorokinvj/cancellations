@@ -6,8 +6,9 @@ import useFirebase from '@/hooks/useFirebase';
 import Spinner from '../ui/spinner';
 import { Cell } from '@tanstack/react-table';
 import { Request, RequestStatus } from '@/lib/db/schema';
-import { useFormContext, useController } from 'react-hook-form';
+import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
+import { Select as SelectTremor, SelectItem } from '@tremor/react';
 
 type CellProps<R, T> = {
   cell: Cell<R, T>;
@@ -36,6 +37,9 @@ const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
   const {
     control,
     setValue,
+    setError,
+    clearErrors,
+    getValues,
     formState: { errors },
   } = useFormContext();
   const cellValue = cell.getValue() as boolean | null;
@@ -48,10 +52,23 @@ const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
   });
 
   const handleChange = (value: string) => {
-    setValue(
-      'successfullyResolved',
-      value === 'Yes' ? true : value === 'No' ? false : null,
-    );
+    clearErrors('successfullyResolved');
+    const newValue = value === 'Yes' ? true : value === 'No' ? false : null;
+    setValue('successfullyResolved', newValue);
+
+    // If the answer is No, check if declineReason is empty and set an error if it is
+    if (value === 'No') {
+      const declineReason = getValues('declineReason');
+      if (!declineReason || declineReason.trim() === '') {
+        setError('declineReason', {
+          type: 'required',
+          message: 'Provide a decline reason',
+        });
+      }
+    } else {
+      // Clear the declineReason error if the answer is not No
+      clearErrors('declineReason');
+    }
   };
 
   const displayValue = field.value === null ? '' : field.value ? 'Yes' : 'No';
@@ -134,6 +151,58 @@ const RequestTypeCell: FC<CellProps<Request, 'Cancellation'>> = ({ cell }) => {
   );
 };
 
+const DeclineReasonCell: FC<CellProps<Request, string>> = ({ cell }) => {
+  const {
+    control,
+    formState: { errors },
+    clearErrors,
+    setValue,
+  } = useFormContext();
+
+  const declineReason = cell.getValue();
+  const options = [
+    'Wrong Customer Name',
+    'Wrong Customer Email',
+    'Wrong Account Number',
+    'Wrong Last 4 CC Digits',
+  ];
+
+  const handleChange = (value: string) => {
+    clearErrors('declineReason');
+    setValue('declineReason', value);
+  };
+
+  return (
+    <div>
+      <Controller
+        name="declineReason"
+        control={control}
+        defaultValue={declineReason}
+        render={({ field }) => (
+          <SelectTremor
+            enableClear={false}
+            className="w-60"
+            placeholder="Select a reason"
+            value={field.value}
+            onValueChange={handleChange}
+          >
+            {options.map(option => (
+              <SelectItem key={option} value={option} className="w-full">
+                {option}
+              </SelectItem>
+            ))}
+          </SelectTremor>
+        )}
+      />
+      {errors.declineReason && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.declineReason.message as string}
+        </p>
+      )}
+    </div>
+  );
+};
+
 export {
   DateCell,
   UsernameCell,
@@ -141,4 +210,5 @@ export {
   SourceCell,
   StatusCell,
   RequestTypeCell,
+  DeclineReasonCell,
 };

@@ -23,7 +23,7 @@ const RequestsList: React.FC<{ requests: Request[] }> = ({ requests }) => {
             <DateRangePicker className="z-30 mx-auto max-w-sm" />
           </div>
         </div>
-        <div className="p-4 flex flex-col space-y-4">
+        <div className="p-4 flex flex-col space-y-4 h-full flex-1">
           <RequestsTable requests={requests} />
         </div>
       </div>

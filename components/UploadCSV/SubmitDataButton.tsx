@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useUpload } from './UploadCSVProvider/upload.hooks';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../../lib/firebase/config';
 import { CURRENT_SCHEMA_VERSION, Request } from '../../lib/db/schema';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,7 +48,7 @@ const SubmitDataButton = () => {
           status: 'Pending',
           submittedBy: userData?.email,
           requestType: 'Cancellation',
-          dateSubmitted: Timestamp.now(),
+          dateSubmitted: new Date().toISOString(),
           dateResponded: null,
           proxyTenantId: userData?.tenantId,
           providerTenantId: selectedProviderId,

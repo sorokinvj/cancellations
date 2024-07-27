@@ -12,26 +12,18 @@ export const metadata: Metadata = {
   title: 'Requests',
 };
 
-initializeFirebaseAdmin();
-
-const getCachedData = async (
+const getData = async (
   tenantType: string,
   tenantId: string,
 ): Promise<Request[]> => {
   const db = getFirestore();
   const requestsRef = db.collection('requests');
   let query;
-  console.log(
-    `Fetching data for tenantType: ${tenantType}, tenantId: ${tenantId}`,
-  );
 
   if (tenantType === 'proxy') {
     query = requestsRef.where('proxyTenantId', '==', tenantId);
-    console.log(`Query: requests where proxyTenantId == ${tenantId}`);
   } else if (tenantType === 'provider') {
-    console.log(`Query: requests where providerTenantId == ${tenantId}`);
     query = requestsRef.where('providerTenantId', '==', tenantId);
-    console.log(`Query: requests where providerTenantId == ${tenantId}`);
   } else {
     throw new Error('Invalid tenant type');
   }
@@ -40,21 +32,16 @@ const getCachedData = async (
 
     return snapshot.docs.map(doc => {
       const data = doc.data();
-      return {
-        ...data,
-        dateSubmitted: data.dateSubmitted.toDate().toISOString(),
-        dateResponded: data.dateResponded
-          ? data.dateResponded.toDate().toISOString()
-          : null,
-      } as Request;
+      return data as Request;
     });
   } catch (error) {
-    console.error('Error getting requests:', error);
     throw new Error('Error getting requests');
   }
 };
 
 export default async function RequestsPage() {
+  await initializeFirebaseAdmin();
+
   const sessionCookie = cookies().get('session')?.value;
   if (!sessionCookie) {
     return <div>Please log in to view this page.</div>;
@@ -70,7 +57,7 @@ export default async function RequestsPage() {
       throw new Error('Tenant information missing from token');
     }
 
-    const requests = await getCachedData(tenantType, tenantId);
+    const requests = await getData(tenantType, tenantId);
     return <RequestsList requests={requests} />;
   } catch (error) {
     console.error('Error verifying session or fetching data:', error);

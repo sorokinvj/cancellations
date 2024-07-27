@@ -16,6 +16,7 @@ import {
   ResolveCell,
   StatusCell,
   RequestTypeCell,
+  DeclineReasonCell,
 } from './Cell';
 import EmptyRequestsState from './EmptyTable';
 import ReportButton from './ReportButton';
@@ -97,16 +98,9 @@ const RequestsTable: FC<Props> = ({ requests }) => {
         ]
       : []),
     {
-      header: 'Rescue Offer',
-      accessorKey: 'rescueOffer',
-    },
-    {
       header: 'Decline Reason',
       accessorKey: 'declineReason',
-    },
-    {
-      header: 'Notes',
-      accessorKey: 'notes',
+      cell: DeclineReasonCell,
     },
     ...(isProviderUser
       ? [
@@ -134,7 +128,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto h-full">
       <table>
         <thead className="border-b border-gray-200">
           {table.getHeaderGroups().map(headerGroup => (

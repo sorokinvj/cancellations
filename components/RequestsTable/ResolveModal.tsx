@@ -9,8 +9,8 @@ import {
   IoMdCloseCircleOutline,
 } from 'react-icons/io';
 import useFirebase from '@/hooks/useFirebase';
-import { Timestamp } from 'firebase/firestore';
 import { parseErrorMessage } from '@/utils/helpers';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   shown: boolean;
@@ -24,10 +24,12 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
     watch,
     formState: { errors },
   } = useFormContext();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const successfullyResolved = watch('successfullyResolved');
+  const declineReason = watch('declineReason');
   const { updateRequestDocument } = useFirebase({ collectionName: 'requests' });
 
   if (!shown) return null;
@@ -64,11 +66,13 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
       const newData: Request = {
         ...request,
         successfullyResolved,
-        dateResponded: Timestamp.now(),
+        dateResponded: new Date().toISOString(),
         status: successfullyResolved ? 'Canceled' : 'Declined',
+        declineReason: successfullyResolved ? null : declineReason,
       };
-      updateRequestDocument(newData);
+      await updateRequestDocument(newData);
       closeModal();
+      router.refresh();
     } catch (error) {
       setSubmitError(parseErrorMessage(error));
     } finally {
@@ -102,6 +106,12 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
         <div>
           <p className="font-bold">{resolveStatus?.message}</p>
           <p className="mt-1">{resolveStatus?.description}</p>
+          {successfullyResolved === false && declineReason && (
+            <p className="mt-2 font-semibold">
+              Decline Reason:{' '}
+              <span className="font-normal">{declineReason}</span>
+            </p>
+          )}
         </div>
       </div>
       {errors.successfullyResolved && (

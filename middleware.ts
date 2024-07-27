@@ -8,7 +8,7 @@ export const config = {
 };
 
 // Simple in-memory cache
-const verificationCache = new Map<string, number>();
+export const verificationCache = new Map<string, number>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export async function middleware(request: NextRequest) {
@@ -38,11 +38,11 @@ export async function middleware(request: NextRequest) {
   );
 
   if (!verifyResponse.ok) {
+    console.error('Session verification failed in middleware');
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Cache the verification result
   verificationCache.set(session, now);
-
   return NextResponse.next();
 }

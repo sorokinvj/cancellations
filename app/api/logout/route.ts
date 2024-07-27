@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
 import { getAuth } from 'firebase-admin/auth';
 import { cookies } from 'next/headers';
+import { verificationCache } from '@/middleware';
 
 export async function POST() {
   try {
@@ -20,9 +21,11 @@ export async function POST() {
       );
       // Revoke refresh tokens for the user
       await auth.revokeRefreshTokens(decodedClaims.sub);
+
+      verificationCache.delete(sessionCookie);
     }
 
-    const response = NextResponse.json({ status: 'success' });
+    const response = NextResponse.json({ status: 'success' }, { status: 200 });
 
     // Clear the session cookie
     response.cookies.set('session', '', {

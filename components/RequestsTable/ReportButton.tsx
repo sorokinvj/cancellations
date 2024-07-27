@@ -43,9 +43,7 @@ const ReportButton: React.FC<ReportButtonProps> = ({
           <IoIosPaper />
           Report
         </Button>
-        {dirtyForm && (
-          <p className="text-red-500 text-sm mt-1">plz, fix errors</p>
-        )}
+        {dirtyForm && <p className="text-red-500 text-sm mt-1">fix errors</p>}
       </div>
       <ResolveModal
         shown={resolveModal}
