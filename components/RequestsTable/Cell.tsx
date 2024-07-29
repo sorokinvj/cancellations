@@ -10,7 +10,7 @@ import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
 
-type CellProps<R, T> = {
+export type CellProps<R, T> = {
   cell: Cell<R, T>;
 };
 

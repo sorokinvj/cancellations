@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { getDisplayHeader } from './upload.utils';
 
 const UploadTable: FC = () => {
   const { csv } = useUpload();
@@ -15,7 +16,7 @@ const UploadTable: FC = () => {
     const columnHelper = createColumnHelper<Record<string, string>>();
     return csv.headers.map(header =>
       columnHelper.accessor(header, {
-        header: header,
+        header: getDisplayHeader(header),
         cell: info => info.getValue(),
       }),
     );

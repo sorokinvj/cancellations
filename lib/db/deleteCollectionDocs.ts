@@ -75,8 +75,8 @@ export const deletAllCollections = async () => {
 // Self-invoking async function to run the script
 (async () => {
   try {
-    await deleteAllDocumentsInCollection('requests');
-    console.log('Deletion of collection "Requests" completed successfully.');
+    await deletAllCollections();
+    console.log('Deletion of all collections completed successfully.');
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error message:', error.message);

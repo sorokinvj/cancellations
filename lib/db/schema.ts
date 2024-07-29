@@ -5,6 +5,12 @@ export type RequestStatus =
   | 'Declined'
   | 'Rescue Attempt';
 
+export type CustomerInfoField =
+  | 'customerName'
+  | 'customerEmail'
+  | 'accountNumber'
+  | 'lastFourCCDigits';
+
 export interface Request {
   id: string;
   version: number;
@@ -15,15 +21,12 @@ export interface Request {
   dateResponded: string | null;
   proxyTenantId: string;
   providerTenantId: string;
-  customerName: string;
-  customerEmail: string;
-  accountNumber: string;
-  lastFourCCDigits: string;
-  successfullyResolved: boolean | null; // local changes
-  rescueOffer: string | null; // local changes
-  rescueOfferText: string | null; // local changes
-  declineReason: string | null; // local changes
-  notes: string | null; // local changes
+  customerInfo: { [K in CustomerInfoField]?: string };
+  successfullyResolved: boolean | null;
+  rescueOffer: string | null;
+  rescueOfferText: string | null;
+  declineReason: string | null;
+  notes: string | null;
 }
 
 export interface User {
@@ -34,8 +37,7 @@ export interface User {
   tenantName: string;
   tenantType: 'proxy' | 'provider';
   role: 'admin' | 'user';
-  createdAt: Date;
-  lastLogin: Date | null;
+  createdAt: string;
   name: string;
 }
 
@@ -44,11 +46,12 @@ export interface Tenant {
   version: number;
   name: string;
   type: 'proxy' | 'provider';
-  createdAt: Date;
+  createdAt: string;
   active: boolean;
+  requiredCustomerInfo?: CustomerInfoField[]; // Only for provider tenants
 }
 
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 export const collections = {
   requests: 'requests',

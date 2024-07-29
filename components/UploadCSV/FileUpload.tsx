@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import axios from 'axios';
 import { Upload } from 'lucide-react';
 import { FileUploader } from 'react-drag-drop-files';
@@ -6,7 +6,6 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 
 import { useUpload } from './UploadCSVProvider/upload.hooks';
 import { Button } from '@/components/ui/button';
-import { Link } from '@/components/ui/link';
 import { Text } from '@/components/ui/text';
 import Spinner from '@/components/ui/spinner';
 
@@ -77,6 +76,36 @@ const FileUpload: FC = () => {
     setSelectedProvider(value);
   };
 
+  const generateCSVTemplate = useCallback(() => {
+    if (!selectedProviderId || !providersData) return '';
+
+    const selectedProvider = providersData.find(
+      p => p.id === selectedProviderId,
+    );
+    if (!selectedProvider || !selectedProvider.requiredCustomerInfo) return '';
+
+    const headers = selectedProvider.requiredCustomerInfo.join(',');
+    return headers;
+  }, [selectedProviderId, providersData]);
+
+  const handleDownloadTemplate = useCallback(() => {
+    const csvContent = generateCSVTemplate();
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const providerName = providersData?.find(
+      p => p.id === selectedProviderId,
+    )?.name;
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${providerName} template.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }, [generateCSVTemplate, selectedProviderId, providersData]);
+
   return (
     <div className="max-w-xl w-full">
       <div className="bg-gray-50 p-6 rounded-lg shadow flex flex-col gap-4">
@@ -97,14 +126,14 @@ const FileUpload: FC = () => {
         <Text>
           Upload a CSV file with the refund data. Make sure your CSV file
           follows the required format.{' '}
-          <Link
-            href="/template.csv"
-            download
-            className="text-blue-500 hover:underline"
-          >
-            Download template
-          </Link>
         </Text>
+        <Button
+          onClick={handleDownloadTemplate}
+          disabled={!selectedProviderId}
+          className="text-blue-500 hover:underline disabled:text-gray-400 disabled:no-underline w-fit"
+        >
+          Download template
+        </Button>
         <Text className="text-sm text-gray-600">
           Please ensure all payment information is correct before submitting.
           For any issues or support, please contact our customer service team.

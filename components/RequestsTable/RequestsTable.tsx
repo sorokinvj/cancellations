@@ -7,6 +7,7 @@ import {
   getCoreRowModel,
   flexRender,
   Row,
+  Cell,
 } from '@tanstack/react-table';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -73,20 +74,20 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     },
     {
       header: 'Customer Name',
-      accessorKey: 'customerName',
+      accessorKey: 'customerInfo.customerName',
       cell: UsernameCell,
     },
     {
       header: 'Customer Email',
-      accessorKey: 'customerEmail',
+      accessorKey: 'customerInfo.customerEmail',
     },
     {
       header: 'Account Number',
-      accessorKey: 'accountNumber',
+      accessorKey: 'customerInfo.accountNumber',
     },
     {
       header: 'Last 4 CC Digits',
-      accessorKey: 'lastFourCCDigits',
+      accessorKey: 'customerInfo.lastFourCCDigits',
     },
     ...(isProviderUser
       ? [
@@ -100,7 +101,13 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     {
       header: 'Decline Reason',
       accessorKey: 'declineReason',
-      cell: DeclineReasonCell,
+      cell: ({
+        getValue,
+        cell,
+      }: {
+        getValue: () => string;
+        cell: Cell<Request, string>;
+      }) => (isProviderUser ? <DeclineReasonCell cell={cell} /> : getValue()),
     },
     ...(isProviderUser
       ? [

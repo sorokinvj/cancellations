@@ -42,6 +42,15 @@ const SubmitDataButton = () => {
       const requestsCollection = collection(database, 'requests');
 
       for (const row of csv.data) {
+        const customerInfo: { [key: string]: string } = {};
+
+        // Dynamically add fields that are present in the CSV
+        for (const key in row) {
+          if (Object.prototype.hasOwnProperty.call(row, key)) {
+            customerInfo[key] = row[key] || '';
+          }
+        }
+
         const request: Request = {
           id: uuidv4(),
           version: CURRENT_SCHEMA_VERSION,
@@ -52,10 +61,7 @@ const SubmitDataButton = () => {
           dateResponded: null,
           proxyTenantId: userData?.tenantId,
           providerTenantId: selectedProviderId,
-          customerName: row.customerName || '',
-          customerEmail: row.customerEmail || '',
-          accountNumber: row.accountNumber || '',
-          lastFourCCDigits: row.lastFourCCDigits || '',
+          customerInfo,
           notes: null,
           successfullyResolved: null,
           rescueOffer: null,
