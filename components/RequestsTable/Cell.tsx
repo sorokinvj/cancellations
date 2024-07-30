@@ -8,7 +8,6 @@ import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
 import Spinner from '../ui/spinner';
-import { render } from 'react-dom';
 
 export type CellProps<R, T> = {
   cell: Cell<R, T>;
