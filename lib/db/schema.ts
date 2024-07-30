@@ -3,7 +3,10 @@ export type RequestStatus =
   | 'Pending'
   | 'Canceled'
   | 'Declined'
-  | 'Rescue Attempt';
+  | 'Save Offered'
+  | 'Save Declined'
+  | 'Save Accepted'
+  | 'Save Confirmed';
 
 export type CustomerInfoField =
   | 'customerName'

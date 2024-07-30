@@ -1,4 +1,4 @@
-import { Request } from '@/lib/db/schema';
+import { Request, RequestStatus } from '@/lib/db/schema';
 
 /**
  * Sends a GET request to fetch requests based on tenant type and ID.
@@ -76,4 +76,11 @@ export async function updateRequest(request: Request): Promise<void> {
   if (!response.ok) {
     throw new Error('Failed to update request');
   }
+}
+
+export function filterRequests(
+  requests: Request[],
+  statuses: RequestStatus[],
+): Request[] {
+  return requests.filter(request => statuses.includes(request.status));
 }

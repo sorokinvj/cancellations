@@ -1,13 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React from 'react';
-import { FaChartSimple } from 'react-icons/fa6';
-import { FaPhone, FaCog, FaFileCsv } from 'react-icons/fa';
+import { FaChartSimple, FaFileCsv } from 'react-icons/fa6';
+import { BsListUl } from 'react-icons/bs';
+import { MdOutlineAssignmentTurnedIn } from 'react-icons/md';
 import { Toaster } from 'react-hot-toast';
 import clsx from 'clsx';
 import { useAuth } from '@/hooks/useAuth';
 import Profile from '../Profile/Profile';
 import SidebarButton from '../SidebarButton/SidebarButton';
+import { FaCog } from 'react-icons/fa';
 
 export default function ClientLayout({
   children,
@@ -55,10 +57,14 @@ export default function ClientLayout({
                     ]}
                   />
                   <SidebarButton
+                    link="/actions"
+                    label="Actions Needed"
+                    Icon={MdOutlineAssignmentTurnedIn}
+                  />
+                  <SidebarButton
                     link="/requests"
-                    label="Requests"
-                    Icon={FaPhone}
-                    activePaths={['/call-details', '/data-refunds']}
+                    label="All Requests"
+                    Icon={BsListUl}
                   />
                   <SidebarButton
                     link="/upload"
