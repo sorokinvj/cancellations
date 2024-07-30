@@ -3,7 +3,7 @@ import { formatDate } from '@/utils/helpers';
 import { User, Network } from 'lucide-react';
 import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
 import { Cell } from '@tanstack/react-table';
-import { Request, RequestStatus } from '@/lib/db/schema';
+import { Request } from '@/lib/db/schema';
 import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
@@ -111,27 +111,6 @@ const TenantCell: FC<{ name: string; isLoading: boolean }> = ({
   );
 };
 
-const StatusCell: FC<CellProps<Request, RequestStatus>> = ({ cell }) => {
-  const status = cell.getValue();
-  const colorMap: Record<RequestStatus, string> = {
-    Pending: 'bg-sky-100 text-sky-800',
-    Canceled: 'bg-green-100 text-green-800',
-    Declined: 'bg-red-100 text-red-800',
-    'Save Offered': 'bg-amber-100 text-amber-200',
-    'Save Declined': 'bg-amber-100 text-amber-400',
-    'Save Accepted': 'bg-amber-100 text-amber-500',
-    'Save Confirmed': 'bg-amber-100 text-amber-800',
-  };
-
-  return (
-    <span
-      className={`px-2 py-1 rounded-full text-xs font-medium ${colorMap[status] ?? ''}`}
-    >
-      {status}
-    </span>
-  );
-};
-
 const RequestTypeCell: FC<CellProps<Request, 'Cancellation'>> = ({ cell }) => {
   const status = cell.getValue();
   const colorMap = {
@@ -204,7 +183,6 @@ export {
   UsernameCell,
   ResolveCell,
   TenantCell,
-  StatusCell,
   RequestTypeCell,
   DeclineReasonCell,
 };

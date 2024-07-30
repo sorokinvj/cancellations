@@ -1,5 +1,33 @@
 import { Request, RequestStatus } from '@/lib/db/schema';
 
+export const getRequest = async ({
+  id,
+  tenantType,
+  tenantId,
+}: {
+  id: string;
+  tenantType: string | undefined;
+  tenantId: string | undefined;
+}) => {
+  console.log('getRequest', id, tenantType, tenantId);
+  const response = await fetch(
+    `/api/request/${id}?tenantType=${tenantType}&tenantId=${tenantId}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch request');
+  }
+
+  const request = (await response.json()) as Request;
+  return request;
+};
+
 /**
  * Sends a GET request to fetch requests based on tenant type and ID.
  * @param {string | undefined} tenantType - The tenant type of the request.

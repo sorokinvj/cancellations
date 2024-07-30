@@ -1,7 +1,7 @@
 // file: components/RequestsTable/RequestsTable.tsx
 'use client';
 import { FC } from 'react';
-import { Request } from '@/lib/db/schema';
+import { Request, RequestStatus as RequestStatusType } from '@/lib/db/schema';
 import {
   useReactTable,
   getCoreRowModel,
@@ -13,7 +13,6 @@ import { useAuth } from '@/hooks/useAuth';
 import {
   DateCell,
   ResolveCell,
-  StatusCell,
   RequestTypeCell,
   DeclineReasonCell,
   TenantCell,
@@ -25,6 +24,9 @@ import useFirebase from '@/hooks/useFirebase';
 import { generateCustomerInfoColumns } from './table.utils';
 import { CustomColumnMeta } from '@/constants/app.types';
 import clsx from 'clsx';
+import Link from 'next/link';
+import RequestStatus from '../RequestStatus/RequestStatus';
+
 interface Props {
   requests: Request[];
 }
@@ -41,11 +43,21 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     {
       header: 'ID',
       accessorKey: 'id',
+      cell: ({ cell }: { cell: Cell<Request, string> }) => (
+        <Link
+          href={`/requests/${cell.getValue()}`}
+          className="text-blue-600 underline decoration-blue-600/50 hover:decoration-blue-600 dark:text-blue-400 dark:decoration-blue-400/50 dark:hover:decoration-blue-400"
+        >
+          {cell.getValue()}
+        </Link>
+      ),
     },
     {
       header: 'Status',
       accessorKey: 'status',
-      cell: StatusCell,
+      cell: ({ cell }: { cell: Cell<Request, RequestStatusType> }) => (
+        <RequestStatus status={cell.getValue()} />
+      ),
       size: 130,
     },
     {
