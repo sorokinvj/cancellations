@@ -8,7 +8,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { getRequests } from './getRequests';
+import { getRequests } from '@/lib/api/request';
 
 export const metadata: Metadata = {
   title: 'Requests',

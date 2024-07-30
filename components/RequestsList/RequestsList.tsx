@@ -5,7 +5,7 @@ import { DateRangePicker } from '@tremor/react';
 import { IoIosPaper } from 'react-icons/io';
 import RequestsTable from '@/components/RequestsTable/RequestsTable';
 import { useQuery } from '@tanstack/react-query';
-import { getRequests } from '@/app/(main)/requests/getRequests';
+import { getRequests } from '@/lib/api/request';
 import { useAuth } from '@/hooks/useAuth';
 
 const RequestsList: React.FC = () => {

@@ -9,7 +9,7 @@ import {
   IoMdCloseCircleOutline,
 } from 'react-icons/io';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateRequest } from '@/app/(main)/requests/updateRequest';
+import { updateRequest } from '@/lib/api/request';
 import { useAuth } from '@/hooks/useAuth';
 
 interface Props {

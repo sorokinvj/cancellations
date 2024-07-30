@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postRequests } from '@/app/(main)/requests/postRequests';
+import { postRequests } from '@/lib/api/request';
 
 const SubmitDataButton = () => {
   const queryClient = useQueryClient();
