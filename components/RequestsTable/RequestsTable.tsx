@@ -12,16 +12,19 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import {
   DateCell,
-  SourceCell,
-  UsernameCell,
   ResolveCell,
   StatusCell,
   RequestTypeCell,
   DeclineReasonCell,
+  TenantCell,
 } from './Cell';
 import EmptyRequestsState from './EmptyTable';
 import ReportButton from './ReportButton';
 import RequestRow from './Row';
+import useFirebase from '@/hooks/useFirebase';
+import { generateCustomerInfoColumns } from './table.utils';
+import { CustomColumnMeta } from '@/constants/app.types';
+import clsx from 'clsx';
 interface Props {
   requests: Request[];
 }
@@ -29,11 +32,11 @@ interface Props {
 const RequestsTable: FC<Props> = ({ requests }) => {
   const { userData } = useAuth();
   const isProviderUser = userData?.tenantType === 'provider';
+  const { data: tenants, loading: tenantsLoading } = useFirebase({
+    collectionName: 'tenants',
+  });
 
-  const handleSubmitReport = async (request: Request) => {
-    console.log(request);
-  };
-
+  const customerInfoColumns = generateCustomerInfoColumns(requests);
   const columns = [
     {
       header: 'ID',
@@ -43,16 +46,18 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       header: 'Status',
       accessorKey: 'status',
       cell: StatusCell,
+      size: 130,
     },
-    ...(isProviderUser
-      ? [
-          {
-            header: 'Source',
-            accessorKey: 'proxyTenantId',
-            cell: SourceCell,
-          },
-        ]
-      : []),
+    {
+      header: isProviderUser ? 'Source' : 'Destination',
+      accessorKey: isProviderUser ? 'proxyTenantId' : 'providerTenantId',
+      cell: ({ cell }: { cell: Cell<Request, string> }) => {
+        const name = tenants?.find(
+          tenant => tenant.id === cell.getValue(),
+        )?.name;
+        return <TenantCell name={name} isLoading={tenantsLoading} />;
+      },
+    },
     {
       header: 'Submitted by',
       accessorKey: 'submittedBy',
@@ -72,23 +77,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
       accessorKey: 'dateResponded',
       cell: DateCell,
     },
-    {
-      header: 'Customer Name',
-      accessorKey: 'customerInfo.customerName',
-      cell: UsernameCell,
-    },
-    {
-      header: 'Customer Email',
-      accessorKey: 'customerInfo.customerEmail',
-    },
-    {
-      header: 'Account Number',
-      accessorKey: 'customerInfo.accountNumber',
-    },
-    {
-      header: 'Last 4 CC Digits',
-      accessorKey: 'customerInfo.lastFourCCDigits',
-    },
+    ...customerInfoColumns,
     ...(isProviderUser
       ? [
           {
@@ -114,10 +103,7 @@ const RequestsTable: FC<Props> = ({ requests }) => {
           {
             id: 'Actions',
             cell: ({ row }: { row: Row<Request> }) => (
-              <ReportButton
-                request={row.original}
-                handleSubmitReport={handleSubmitReport}
-              />
+              <ReportButton request={row.original} />
             ),
           },
         ]
@@ -136,20 +122,35 @@ const RequestsTable: FC<Props> = ({ requests }) => {
 
   return (
     <div className="overflow-x-auto h-full">
-      <table>
+      <table className="w-full border-collapse table-auto">
         <thead className="border-b border-gray-200">
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id} className="p-4 whitespace-nowrap text-left">
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
+              {headerGroup.headers.map(header => {
+                const meta = header.column.columnDef.meta as CustomColumnMeta;
+                const isHighlightable = meta?.isHighlightable;
+                const width = header.column.getSize();
+                const headerClassName = clsx(
+                  `p-4 whitespace-nowrap text-left`,
+                  {
+                    'bg-yellow-50': isHighlightable,
+                  },
+                );
+                return (
+                  <th
+                    key={header.id}
+                    className={headerClassName}
+                    style={{ minWidth: `${width}px` }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>

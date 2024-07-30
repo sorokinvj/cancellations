@@ -48,7 +48,6 @@ const LoginForm: React.FC = () => {
     } catch (error) {
       console.error('Error signing in:', error);
       setError('Invalid email or password or session creation failed.');
-    } finally {
       setLoading(false);
     }
   };
@@ -107,20 +106,20 @@ const LoginForm: React.FC = () => {
             <div className="flex items-start">
               <div className="flex h-5 items-center">
                 <CheckboxField>
-                  <Checkbox className="text-flair-600" />
+                  <Checkbox className="text-blue-600" />
                   <Label>Remember me</Label>
                 </CheckboxField>
               </div>
             </div>
             <Link
               href="/reset-password"
-              className="text-flair-600 text-sm font-medium hover:underline"
+              className="text-blue-600 text-sm font-medium hover:underline"
             >
               Forgot password?
             </Link>
           </div>
           <Button
-            className="w-full text-flair-600"
+            className="w-full text-blue-600"
             disabled={!email || !password}
             type="submit"
             loading={loading}

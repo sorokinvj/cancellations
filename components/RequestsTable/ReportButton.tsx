@@ -7,13 +7,9 @@ import { Request } from '@/lib/db/schema';
 
 interface ReportButtonProps {
   request: Request;
-  handleSubmitReport: (request: Request) => void;
 }
 
-const ReportButton: React.FC<ReportButtonProps> = ({
-  request,
-  handleSubmitReport,
-}) => {
+const ReportButton: React.FC<ReportButtonProps> = ({ request }) => {
   const [resolveModal, setResolveModal] = useState(false);
   const {
     trigger,
@@ -39,17 +35,16 @@ const ReportButton: React.FC<ReportButtonProps> = ({
           outline={true}
           className="flex items-center whitespace-nowrap"
           onClick={handleClick}
+          disabled={dirtyForm}
         >
           <IoIosPaper />
           Report
         </Button>
-        {dirtyForm && <p className="text-red-500 text-sm mt-1">fix errors</p>}
       </div>
       <ResolveModal
         shown={resolveModal}
         request={request}
         closeModal={() => setResolveModal(false)}
-        handleSubmit={handleSubmitReport}
       />
     </>
   );

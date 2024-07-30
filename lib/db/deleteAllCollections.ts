@@ -18,36 +18,6 @@ const initializeFirebaseAdmin = () => {
   return getApps()[0];
 };
 
-export const deleteAllDocumentsInCollection = async (
-  collectionName: string,
-) => {
-  console.log('Initializing Firebase Admin...');
-  const app = initializeFirebaseAdmin();
-  console.log('Firebase Admin initialized successfully');
-
-  const db = getFirestore(app);
-  console.log(`Deleting all documents in collection: ${collectionName}`);
-  const collectionRef = db.collection(collectionName);
-  const querySnapshot = await collectionRef.get();
-
-  if (querySnapshot.empty) {
-    console.log(`No documents found in collection: ${collectionName}`);
-    return;
-  }
-
-  const batch = db.batch();
-
-  querySnapshot.forEach(doc => {
-    console.log('Queueing deletion for doc:', doc.id);
-    batch.delete(doc.ref);
-  });
-
-  await batch.commit();
-  console.log(
-    `All documents in collection ${collectionName} have been deleted.`,
-  );
-};
-
 export const deletAllCollections = async () => {
   console.log('Initializing Firebase Admin...');
   const app = initializeFirebaseAdmin();

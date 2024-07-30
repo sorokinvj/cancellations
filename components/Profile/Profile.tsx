@@ -36,7 +36,7 @@ const Profile: React.FC = () => {
   return (
     <li className={`relative ${bgColorMap[userData.tenantType]}`}>
       <button
-        className="relative text-md group flex items-center gap-x-3 rounded-md p-2 font-semibold text-gray-700 hover:text-flair-700 focus:outline-none w-full"
+        className="relative text-md group flex items-center gap-x-3 rounded-md p-2 font-semibold text-gray-700 hover:text-blue-700 focus:outline-none w-full"
         onClick={() => setShowDropdown(!showDropdown)}
       >
         <FaUser className="h-6 w-6 shrink-0" aria-hidden="true" />
@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
           <hr className="my-2" />
           <button
             onClick={handleSignOut}
-            className="block w-full text-left px-4 py-2 text-md text-gray-700 hover:bg-flair-50 hover:text-flair-700"
+            className="block w-full text-left px-4 py-2 text-md text-gray-700 hover:bg-blue-50 hover:text-blue-700"
           >
             Sign out
           </button>

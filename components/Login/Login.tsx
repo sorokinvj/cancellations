@@ -17,7 +17,7 @@ const Login: FC<Props> = ({ type }) => {
     return <LoginForm />;
   };
   return (
-    <div className="bg-flair-900 relative h-screen w-screen">
+    <div className="bg-blue-900 relative h-screen w-screen">
       <div className="absolute z-20 flex h-screen w-screen flex-col justify-center overflow-y-auto">
         {/* Top Nav */}
         <div className="flex items-center gap-5 p-10 font-medium text-white/90">
@@ -44,7 +44,7 @@ const Login: FC<Props> = ({ type }) => {
               </div>
               <div className="flex">
                 <div className="mr-2 mt-1">
-                  <FaCheckCircle className="text-flair-200 text-xl" />
+                  <FaCheckCircle className="text-blue-200 text-xl" />
                 </div>
                 <div>
                   <div className="text-xl font-semibold text-white/85">
@@ -58,7 +58,7 @@ const Login: FC<Props> = ({ type }) => {
               </div>
               <div className="flex">
                 <div className="mr-2 mt-1">
-                  <FaCheckCircle className="text-flair-200 text-xl" />
+                  <FaCheckCircle className="text-blue-200 text-xl" />
                 </div>
                 <div>
                   <div className="text-xl font-semibold text-white/85">
@@ -72,7 +72,7 @@ const Login: FC<Props> = ({ type }) => {
               </div>
               <div className="flex">
                 <div className="mr-2 mt-1">
-                  <FaCheckCircle className="text-flair-200 text-xl" />
+                  <FaCheckCircle className="text-blue-200 text-xl" />
                 </div>
                 <div>
                   <div className="text-xl font-semibold text-white/85">

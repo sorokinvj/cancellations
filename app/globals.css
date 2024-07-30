@@ -31,19 +31,19 @@ code {
 }
 
 @layer components {
-  .flair-btn-primary {
+  .blue-btn-primary {
     @apply rounded bg-blue-500 font-bold normal-case shadow hover:bg-blue-600 active:bg-blue-700 text-white flex items-center space-x-1 justify-center;
   }
 
-  .flair-btn-primary.btn-disabled {
+  .blue-btn-primary.btn-disabled {
     @apply bg-blue-300;
   }
 
-  .flair-btn-secondary {
+  .blue-btn-secondary {
     @apply rounded border border-neutral-200 bg-white font-bold normal-case shadow hover:bg-gray-100 active:bg-gray-200 text-gray-600 flex items-center space-x-1 justify-center;
   }
 
-  .flair-centerify {
+  .blue-centerify {
     @apply flex justify-center items-center;
   }
 }
@@ -92,6 +92,6 @@ code {
   height: 60px;
 }
 
-.flair-audio.rap-container {
+.blue-audio.rap-container {
   box-shadow: none;
 }

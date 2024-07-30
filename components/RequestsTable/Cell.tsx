@@ -2,13 +2,13 @@
 import { formatDate } from '@/utils/helpers';
 import { User, Network } from 'lucide-react';
 import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
-import useFirebase from '@/hooks/useFirebase';
-import Spinner from '../ui/spinner';
 import { Cell } from '@tanstack/react-table';
 import { Request, RequestStatus } from '@/lib/db/schema';
 import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
+import Spinner from '../ui/spinner';
+import { render } from 'react-dom';
 
 export type CellProps<R, T> = {
   cell: Cell<R, T>;
@@ -96,24 +96,18 @@ const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
   );
 };
 
-const SourceCell: FC<CellProps<Request, string>> = ({ cell }) => {
-  const proxyTenantId = cell.getValue();
-  const { data: proxiesData, loading: proxiesLoading } = useFirebase({
-    collectionName: 'tenants',
-    filterBy: 'type',
-    filterValue: 'proxy',
-  });
-
-  const proxy = proxiesData?.find(proxy => proxy.id === proxyTenantId);
-
-  if (proxiesLoading) return <Spinner className="p-2" />;
+const TenantCell: FC<{ name: string; isLoading: boolean }> = ({
+  name,
+  isLoading,
+}) => {
+  if (isLoading) return <Spinner className="p-2" />;
 
   return (
     <div className="flex items-center gap-2">
       <div className="relative flex items-center justify-center w-8 h-8 bg-blue-400 rounded-full">
         <Network size={16} className="text-white" />
       </div>
-      <span>{proxy?.name}</span>
+      <span>{name}</span>
     </div>
   );
 };
@@ -177,7 +171,7 @@ const DeclineReasonCell: FC<CellProps<Request, string>> = ({ cell }) => {
       <Controller
         name="declineReason"
         control={control}
-        defaultValue={declineReason}
+        defaultValue={declineReason ?? ''}
         render={({ field }) => (
           <SelectTremor
             enableClear={false}
@@ -207,7 +201,7 @@ export {
   DateCell,
   UsernameCell,
   ResolveCell,
-  SourceCell,
+  TenantCell,
   StatusCell,
   RequestTypeCell,
   DeclineReasonCell,

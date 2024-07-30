@@ -199,7 +199,7 @@ const ResetForm: React.FC = () => {
           )}
           <p className="text-sm font-light text-gray-500">
             Remembered your password?{' '}
-            <span className="text-flair-600 font-medium hover:underline">
+            <span className="text-blue-600 font-medium hover:underline">
               <Link href="/login">Login</Link>
             </span>
           </p>

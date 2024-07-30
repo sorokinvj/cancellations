@@ -22,10 +22,6 @@ const config = {
     },
     extend: {
       colors: {
-        'flair-green': '#BEE060',
-
-        flair: colors.blue,
-
         // Tremor's light mode
         tremor: {
           brand: {

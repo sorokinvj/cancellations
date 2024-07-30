@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 import Modal from '../ui/Modal';
 import { Request } from '@/lib/db/schema';
@@ -8,15 +8,14 @@ import {
   IoMdCheckmarkCircleOutline,
   IoMdCloseCircleOutline,
 } from 'react-icons/io';
-import useFirebase from '@/hooks/useFirebase';
-import { parseErrorMessage } from '@/utils/helpers';
-import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateRequest } from '@/app/(main)/requests/updateRequest';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Props {
   shown: boolean;
   request: Request;
   closeModal: () => void;
-  handleSubmit: (request: Request) => void;
 }
 
 const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
@@ -24,13 +23,26 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
     watch,
     formState: { errors },
   } = useFormContext();
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { userData } = useAuth();
 
   const successfullyResolved = watch('successfullyResolved');
   const declineReason = watch('declineReason');
-  const { updateRequestDocument } = useFirebase({ collectionName: 'requests' });
+
+  const mutation = useMutation({
+    mutationFn: updateRequest,
+    onSuccess: () => {
+      if (userData?.tenantType && userData?.tenantId) {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', userData.tenantType, userData.tenantId],
+        });
+      }
+      closeModal();
+    },
+    onError: error => {
+      console.error('Error updating request:', error);
+    },
+  });
 
   if (!shown) return null;
 
@@ -59,25 +71,16 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
 
   const resolveStatus = getResolveStatus();
 
-  const onSubmit = async (e: React.FormEvent) => {
-    try {
-      setIsSubmitting(true);
-      e.preventDefault();
-      const newData: Request = {
-        ...request,
-        successfullyResolved,
-        dateResponded: new Date().toISOString(),
-        status: successfullyResolved ? 'Canceled' : 'Declined',
-        declineReason: successfullyResolved ? null : declineReason,
-      };
-      await updateRequestDocument(newData);
-      closeModal();
-      router.refresh();
-    } catch (error) {
-      setSubmitError(parseErrorMessage(error));
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const updatedRequest: Request = {
+      ...request,
+      successfullyResolved,
+      dateResponded: new Date().toISOString(),
+      status: successfullyResolved ? 'Canceled' : 'Declined',
+      declineReason: successfullyResolved ? null : declineReason,
+    };
+    mutation.mutate(updatedRequest);
   };
 
   return (
@@ -88,7 +91,7 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
       size="md"
       footer={
         <div className="flex justify-end space-x-4">
-          <Button color="blue" onClick={onSubmit} loading={isSubmitting}>
+          <Button color="blue" onClick={onSubmit} loading={mutation.isPending}>
             Confirm and Report
           </Button>
           <Button outline onClick={closeModal}>
@@ -130,8 +133,10 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
         </p>
       </div>
 
-      {submitError && (
-        <p className="text-red-500 text-sm mt-2">{submitError}</p>
+      {mutation.isError && (
+        <p className="text-red-500 text-sm mt-2">
+          Error updating request. Please try again.
+        </p>
       )}
     </Modal>
   );

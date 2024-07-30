@@ -29,6 +29,8 @@ export interface Request {
   notes: string | null;
 }
 
+export type TenantType = 'proxy' | 'provider';
+
 export interface User {
   id: string;
   version: number;

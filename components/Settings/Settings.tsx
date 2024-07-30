@@ -32,7 +32,7 @@ const Settings: React.FC = () => {
   const people = [
     {
       name: 'Michael Foster',
-      email: 'michael.foster@flaircomp.com',
+      email: 'michael.foster@bluecomp.com',
       role: 'Project Owner',
       imageUrl:
         'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -42,7 +42,7 @@ const Settings: React.FC = () => {
     },
     {
       name: 'Dries Vincent',
-      email: 'dries.vincent@flaircomp.com',
+      email: 'dries.vincent@bluecomp.com',
       role: 'View Only',
       imageUrl: '/faces/blank-profile-picture.png',
       lastSeen: null,
@@ -50,7 +50,7 @@ const Settings: React.FC = () => {
     },
     {
       name: 'Lindsay Walton',
-      email: 'lindsay.walton@flaircomp.com',
+      email: 'lindsay.walton@bluecomp.com',
       role: 'View Only',
       imageUrl:
         'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -60,7 +60,7 @@ const Settings: React.FC = () => {
     },
     {
       name: 'Adam Smith',
-      email: 'adam.smith@flaircomp.com',
+      email: 'adam.smith@bluecomp.com',
       role: 'View Only',
       imageUrl:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -92,7 +92,7 @@ const Settings: React.FC = () => {
                         onClick={() => handleTabClick(tab.name)}
                         className={clsx(
                           tab.current
-                            ? 'border-flair-500 text-flair-600'
+                            ? 'border-blue-500 text-blue-600'
                             : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                           'cursor-pointer whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium',
                         )}
@@ -121,7 +121,7 @@ const Settings: React.FC = () => {
                       <FieldGroup>
                         <Field>
                           <Label>Organization</Label>
-                          <Input name="email" disabled value={'Flair Labs'} />
+                          <Input name="email" disabled value={'blue Labs'} />
                         </Field>
                       </FieldGroup>
                       {/* <FieldGroup>
@@ -160,7 +160,7 @@ const Settings: React.FC = () => {
                           <div className="text-center font-bold">AWS</div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect AWS functionality */
                             }}
@@ -187,7 +187,7 @@ const Settings: React.FC = () => {
                           <div className="text-center font-bold">GCP</div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect GCP functionality */
                             }}
@@ -196,7 +196,7 @@ const Settings: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-sm">
-                          Connect Flair with Google Cloud Platform (GCP) to
+                          Connect blue with Google Cloud Platform (GCP) to
                           streamline data export processes. Easily send parsed
                           data to GCP with a few clicks, enhancing collaboration
                           and data management.
@@ -214,7 +214,7 @@ const Settings: React.FC = () => {
                           <div className="text-center font-bold">Azure</div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect Azure functionality */
                             }}
@@ -223,7 +223,7 @@ const Settings: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-sm">
-                          Integrate Flair with Microsoft Azure for seamless data
+                          Integrate blue with Microsoft Azure for seamless data
                           export processes. With just a few clicks, send parsed
                           data to Azure, enhancing your data integration
                           capabilities and workflow efficiency.
@@ -243,7 +243,7 @@ const Settings: React.FC = () => {
                           </div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect Google Sheets functionality */
                             }}
@@ -252,7 +252,7 @@ const Settings: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-sm">
-                          Integrate Flair with Google Sheets for a streamlined
+                          Integrate blue with Google Sheets for a streamlined
                           data export process. With just a few clicks, you can
                           easily send parsed data to your Google Sheets,
                           enhancing collaboration and data management.
@@ -270,7 +270,7 @@ const Settings: React.FC = () => {
                           <div className="text-center font-bold">HubSpot</div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect HubSpot functionality */
                             }}
@@ -279,7 +279,7 @@ const Settings: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-sm">
-                          Connect Flair with HubSpot to automate data transfer
+                          Connect blue with HubSpot to automate data transfer
                           and streamline your marketing and sales processes.
                           Ensure seamless communication between your parsing
                           tool and HubSpot for enhanced efficiency.
@@ -297,7 +297,7 @@ const Settings: React.FC = () => {
                           <div className="text-center font-bold">Pipedrive</div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect Pipedrive functionality */
                             }}
@@ -306,7 +306,7 @@ const Settings: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-sm">
-                          Streamline your sales processes by connecting Flair
+                          Streamline your sales processes by connecting blue
                           with Pipedrive. Effortlessly transfer parsed data to
                           Pipedrive, ensuring that your sales team has access to
                           accurate and up-to-date information.
@@ -324,7 +324,7 @@ const Settings: React.FC = () => {
                           <div className="text-center font-bold">Calendar</div>
                           <div className="flex-1" />
                           <button
-                            className="flair-btn-secondary btn-sm"
+                            className="blue-btn-secondary btn-sm"
                             onClick={() => {
                               /* Connect Calendar functionality */
                             }}
@@ -333,7 +333,7 @@ const Settings: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-sm">
-                          Integrate Flair with your calendar applications for
+                          Integrate blue with your calendar applications for
                           real-time updates. Whether you use Google Calendar or
                           other calendar services, easily send parsed data to
                           keep your schedule organized and up-to-date.
@@ -465,7 +465,7 @@ const tiers = [
     id: 'tier-free',
     href: '#',
     price: { monthly: '$0', annually: '$0' },
-    description: "The essentials to try Flair's power.",
+    description: "The essentials to try blue's power.",
     features: ['1 Data Source', '1 Schema', '10 rows per month'],
     featured: false,
     cta: 'Current Plan',
@@ -511,7 +511,7 @@ function Pricing() {
     <div className="flex justify-center py-6">
       <div className="max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-7 max-w-4xl text-center">
-          <h2 className="text-flair-600 text-base font-semibold leading-7">
+          <h2 className="text-blue-600 text-base font-semibold leading-7">
             Pricing
           </h2>
           <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -534,7 +534,7 @@ function Pricing() {
                 value={option}
                 className={({ checked }) =>
                   clsx(
-                    checked ? 'bg-flair-600 text-white' : 'text-gray-500',
+                    checked ? 'bg-blue-600 text-white' : 'text-gray-500',
                     'cursor-pointer rounded-full px-2.5 py-1',
                   )
                 }
@@ -600,7 +600,7 @@ function Pricing() {
                 className={clsx(
                   tier.featured
                     ? 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
-                    : 'bg-flair-600 hover:bg-flair-500 focus-visible:outline-flair-600 text-white shadow-sm',
+                    : 'bg-blue-600 hover:bg-blue-500 focus-visible:outline-blue-600 text-white shadow-sm',
                   'mt-6 block rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
                 )}
               >
@@ -617,7 +617,7 @@ function Pricing() {
                   <li key={feature} className="flex gap-x-3">
                     <CiCircleCheck
                       className={clsx(
-                        tier.featured ? 'text-white' : 'text-flair-600',
+                        tier.featured ? 'text-white' : 'text-blue-600',
                         'h-6 w-5 flex-none',
                       )}
                       aria-hidden="true"

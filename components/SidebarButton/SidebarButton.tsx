@@ -32,8 +32,8 @@ const SidebarButton: React.FC<Props> = ({
       <div
         className={clsx(
           isActive
-            ? 'text-flair-700 bg-flair-100'
-            : 'hover:text-flair-700 hover:bg-flair-50 text-gray-700',
+            ? 'text-blue-700 bg-blue-100'
+            : 'hover:text-blue-700 hover:bg-blue-50 text-gray-700',
           'text-md group flex items-center gap-x-3 rounded-md p-2 font-semibold',
         )}
       >
