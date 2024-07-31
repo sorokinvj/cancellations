@@ -5,7 +5,17 @@ import RequestStatus from '../RequestStatus/RequestStatus';
 import useFirebase from '@/hooks/useFirebase';
 import Spinner from '../ui/spinner';
 
-const RequestDetails: React.FC<{ request: Request }> = ({ request }) => {
+const RequestDetails: React.FC<{ request: Request | null }> = ({ request }) => {
+  const { data: tenants, loading: tenantsLoading } = useFirebase({
+    collectionName: 'tenants',
+  });
+
+  const findTenantName = (tenantId: string) => {
+    return tenants?.find(tenant => tenant.id === tenantId)?.name;
+  };
+
+  if (!request) return null;
+
   const {
     id,
     status,
@@ -23,18 +33,13 @@ const RequestDetails: React.FC<{ request: Request }> = ({ request }) => {
     notes,
   } = request;
 
-  const { data: tenants, loading: tenantsLoading } = useFirebase({
-    collectionName: 'tenants',
-  });
-
-  const findTenantName = (tenantId: string) => {
-    return tenants?.find(tenant => tenant.id === tenantId)?.name;
-  };
+  const hasAdditonalDetails =
+    rescueOffer || rescueOfferText || declineReason || notes;
 
   return (
-    <div className="max-w-4xl p-2">
+    <div className="p-2">
       <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-        <div>
+        <div className="bg-white p-4 rounded-lg">
           <div className="flex items-center gap-2 mb-4">
             <h2 className="text-xl font-semibold">Request Information</h2>{' '}
             <RequestStatus status={status} />
@@ -68,25 +73,35 @@ const RequestDetails: React.FC<{ request: Request }> = ({ request }) => {
           )}
         </div>
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Customer Information</h2>
-          {Object.entries(customerInfo)
-            .sort((a, b) => a[0].localeCompare(b[0]))
-            .map(([key, value]) => (
-              <InfoItem key={key} label={getDisplayHeader(key)} value={value} />
-            ))}
+        <div className="flex flex-col gap-4">
+          <div className="bg-yellow-50 p-4 rounded-lg">
+            <h2 className="text-xl font-semibold mb-4">Customer Information</h2>
+            {Object.entries(customerInfo)
+              .sort((a, b) => a[0].localeCompare(b[0]))
+              .map(([key, value]) => (
+                <InfoItem
+                  key={key}
+                  label={getDisplayHeader(key)}
+                  value={value}
+                />
+              ))}
+          </div>
 
-          <h2 className="text-xl font-semibold mt-6 mb-4">
-            Additional Details
-          </h2>
-          {rescueOffer && <InfoItem label="Rescue Offer" value={rescueOffer} />}
-          {rescueOfferText && (
-            <InfoItem label="Rescue Offer Text" value={rescueOfferText} />
+          {hasAdditonalDetails && (
+            <div className="bg-white p-4 rounded-lg">
+              <h2 className="text-xl font-semibold mb-4">Additional Details</h2>
+              {rescueOffer && (
+                <InfoItem label="Rescue Offer" value={rescueOffer} />
+              )}
+              {rescueOfferText && (
+                <InfoItem label="Rescue Offer Text" value={rescueOfferText} />
+              )}
+              {declineReason && (
+                <InfoItem label="Decline Reason" value={declineReason} />
+              )}
+              {notes && <InfoItem label="Notes" value={notes} />}
+            </div>
           )}
-          {declineReason && (
-            <InfoItem label="Decline Reason" value={declineReason} />
-          )}
-          {notes && <InfoItem label="Notes" value={notes} />}
         </div>
       </div>
     </div>

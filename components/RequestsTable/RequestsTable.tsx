@@ -1,6 +1,6 @@
 // file: components/RequestsTable/RequestsTable.tsx
 'use client';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Request, RequestStatus as RequestStatusType } from '@/lib/db/schema';
 import {
   useReactTable,
@@ -17,40 +17,69 @@ import {
   DeclineReasonCell,
   TenantCell,
 } from './Cell';
-import EmptyRequestsState from './EmptyTable';
 import ReportButton from './ReportButton';
 import RequestRow from './Row';
 import useFirebase from '@/hooks/useFirebase';
 import { generateCustomerInfoColumns } from './table.utils';
 import { CustomColumnMeta } from '@/constants/app.types';
 import clsx from 'clsx';
-import Link from 'next/link';
 import RequestStatus from '../RequestStatus/RequestStatus';
+import { Button } from '@/components/ui/button';
+import RequestDrawer from '../RequestDetails/RequestDrawer';
+import EmptyRequestsState from './EmptyTable';
 
 interface Props {
   requests: Request[];
+  hasFixButton?: boolean;
+  EmptyComponent?: React.ComponentType;
 }
 
-const RequestsTable: FC<Props> = ({ requests }) => {
+const RequestsTable: FC<Props> = ({
+  requests,
+  hasFixButton,
+  EmptyComponent = EmptyRequestsState,
+}) => {
   const { userData } = useAuth();
   const isProviderUser = userData?.tenantType === 'provider';
   const { data: tenants, loading: tenantsLoading } = useFirebase({
     collectionName: 'tenants',
   });
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
+
+  const toggleDrawer = (request?: Request) => {
+    setIsDrawerOpen(prev => !prev);
+    if (request) {
+      setSelectedRequest(request);
+    } else {
+      setSelectedRequest(null);
+    }
+  };
 
   const customerInfoColumns = generateCustomerInfoColumns(requests);
   const columns = [
     {
-      header: 'ID',
+      header: hasFixButton && !isProviderUser ? '' : 'ID',
       accessorKey: 'id',
-      cell: ({ cell }: { cell: Cell<Request, string> }) => (
-        <Link
-          href={`/requests/${cell.getValue()}`}
-          className="text-blue-600 underline decoration-blue-600/50 hover:decoration-blue-600 dark:text-blue-400 dark:decoration-blue-400/50 dark:hover:decoration-blue-400"
-        >
-          {cell.getValue()}
-        </Link>
-      ),
+      cell: ({
+        cell,
+        row,
+      }: {
+        cell: Cell<Request, string>;
+        row: Row<Request>;
+      }) => {
+        if (hasFixButton && !isProviderUser) {
+          return (
+            <div onClick={e => e.stopPropagation()}>
+              <Button onClick={() => toggleDrawer(row.original)} color="blue">
+                Fix Data
+              </Button>
+            </div>
+          );
+        }
+        return cell.getValue();
+      },
+      size: 100,
     },
     {
       header: 'Status',
@@ -115,7 +144,9 @@ const RequestsTable: FC<Props> = ({ requests }) => {
           {
             id: 'Actions',
             cell: ({ row }: { row: Row<Request> }) => (
-              <ReportButton request={row.original} />
+              <div onClick={e => e.stopPropagation()}>
+                <ReportButton request={row.original} />
+              </div>
             ),
           },
         ]
@@ -128,8 +159,10 @@ const RequestsTable: FC<Props> = ({ requests }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  if (!userData) return null;
+
   if (requests.length === 0) {
-    return <EmptyRequestsState />;
+    return <EmptyComponent />;
   }
 
   return (
@@ -172,6 +205,11 @@ const RequestsTable: FC<Props> = ({ requests }) => {
           ))}
         </tbody>
       </table>
+      <RequestDrawer
+        isOpen={isDrawerOpen}
+        onClose={toggleDrawer}
+        request={selectedRequest}
+      />
     </div>
   );
 };

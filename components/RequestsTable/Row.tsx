@@ -5,6 +5,7 @@ import { Request } from '@/lib/db/schema';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomColumnMeta } from '@/constants/app.types';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 
 interface RequestRowProps {
   row: Row<Request>;
@@ -12,9 +13,18 @@ interface RequestRowProps {
 
 const RequestRow: React.FC<RequestRowProps> = ({ row }) => {
   const methods = useForm();
+  const router = useRouter();
+
+  const handleRowClick = () => {
+    router.push(`/requests/${row.original.id}`);
+  };
+
   return (
     <FormProvider {...methods}>
-      <tr className="border-b border-gray-200">
+      <tr
+        className="border-b border-gray-200 cursor-pointer"
+        onClick={handleRowClick}
+      >
         {row.getVisibleCells().map(cell => {
           const meta = cell.column.columnDef.meta as CustomColumnMeta;
           const isHighlightable = meta?.isHighlightable;

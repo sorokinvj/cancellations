@@ -9,7 +9,6 @@ export const getRequest = async ({
   tenantType: string | undefined;
   tenantId: string | undefined;
 }) => {
-  console.log('getRequest', id, tenantType, tenantId);
   const response = await fetch(
     `/api/request/${id}?tenantType=${tenantType}&tenantId=${tenantId}`,
     {
@@ -93,7 +92,7 @@ export async function postRequests(
  * @throws {Error} If the request fails.
  */
 export async function updateRequest(request: Request): Promise<void> {
-  const response = await fetch(`/api/requests`, {
+  const response = await fetch(`/api/request/${request.id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

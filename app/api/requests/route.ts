@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  getFirestore,
-  Firestore,
-  DocumentData,
-  UpdateData,
-} from 'firebase-admin/firestore';
+import { getFirestore, Firestore } from 'firebase-admin/firestore';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
 import { parseErrorMessage } from '@/utils/helpers';
 import { Request, TenantType } from '@/lib/db/schema';
@@ -106,39 +101,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse(
       JSON.stringify({
         error: 'Failed to create requests: ' + parseErrorMessage(error),
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-  }
-}
-
-/**
- * Handles PATCH requests to update a specific request.
- * @param {NextRequest} req - The incoming request object
- * @returns {Promise<NextResponse>} A response indicating success or an error message.
- */
-export async function PATCH(req: NextRequest): Promise<NextResponse> {
-  const db: Firestore = getFirestore();
-  const updatedRequest: Request = await req.json();
-
-  try {
-    const requestsCollectionRef = db.collection('requests');
-    const docRef = requestsCollectionRef.doc(updatedRequest.id);
-    const updateData = updatedRequest as unknown as UpdateData<DocumentData>;
-
-    await docRef.update(updateData);
-
-    return new NextResponse(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    return new NextResponse(
-      JSON.stringify({
-        error: 'Error updating document: ' + parseErrorMessage(error),
       }),
       {
         status: 500,

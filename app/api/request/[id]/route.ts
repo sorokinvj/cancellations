@@ -1,9 +1,15 @@
 // file: app/api/request/[id]/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getFirestore, Firestore } from 'firebase-admin/firestore';
+import {
+  getFirestore,
+  Firestore,
+  DocumentData,
+  UpdateData,
+} from 'firebase-admin/firestore';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
 import { Request, TenantType } from '@/lib/db/schema';
+import { parseErrorMessage } from '@/utils/helpers';
 
 initializeFirebaseAdmin();
 
@@ -64,6 +70,38 @@ export async function GET(
   } catch (error) {
     return new NextResponse(
       JSON.stringify({ error: 'Error fetching request' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } },
+): Promise<NextResponse> {
+  const db: Firestore = getFirestore();
+  const { id } = params;
+  const updatedRequest: Partial<Request> = await req.json();
+
+  try {
+    const requestsCollectionRef = db.collection('requests');
+    const docRef = requestsCollectionRef.doc(id);
+    const updateData = updatedRequest as unknown as UpdateData<DocumentData>;
+
+    await docRef.update(updateData);
+
+    return new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new NextResponse(
+      JSON.stringify({
+        error: 'Error updating document: ' + parseErrorMessage(error),
+      }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },

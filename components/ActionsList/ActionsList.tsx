@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { filterRequests, getRequests } from '@/lib/api/request';
 import { useAuth } from '@/hooks/useAuth';
 import { RequestStatus } from '@/lib/db/schema';
+import CongratsEmpty from '@/components/RequestsTable/CongratsEmpty';
 
 const ActionsList: React.FC = () => {
   const { userData } = useAuth();
@@ -44,7 +45,11 @@ const ActionsList: React.FC = () => {
           </div>
         </div>
         <div className="p-4 flex flex-col space-y-4 h-full flex-1">
-          <RequestsTable requests={requests} />
+          <RequestsTable
+            requests={requests}
+            hasFixButton={true}
+            EmptyComponent={CongratsEmpty}
+          />
         </div>
       </div>
     </div>

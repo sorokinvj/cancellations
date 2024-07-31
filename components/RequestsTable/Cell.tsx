@@ -73,7 +73,7 @@ const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
   const displayValue = field.value === null ? '' : field.value ? 'Yes' : 'No';
 
   return (
-    <div>
+    <div onClick={e => e.stopPropagation()}>
       <RadioGroup
         className={`flex gap-4 ${errors.successfullyResolved ? 'border border-red-500 p-2 rounded' : ''}`}
         value={displayValue}
@@ -148,7 +148,7 @@ const DeclineReasonCell: FC<CellProps<Request, string>> = ({ cell }) => {
   };
 
   return (
-    <div>
+    <div onClick={e => e.stopPropagation()}>
       <Controller
         name="declineReason"
         control={control}
