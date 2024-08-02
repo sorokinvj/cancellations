@@ -1,15 +1,15 @@
 // file: app/api/request/[id]/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  getFirestore,
-  Firestore,
-  DocumentData,
-  UpdateData,
-} from 'firebase-admin/firestore';
+import { getFirestore, Firestore } from 'firebase-admin/firestore';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
-import { Request, TenantType } from '@/lib/db/schema';
+import {
+  Request,
+  RequestLog,
+  RequestWithLog,
+  TenantType,
+} from '@/lib/db/schema';
 import { parseErrorMessage } from '@/utils/helpers';
+import { detectChanges, updateRequestLog } from '@/lib/firebase/logs';
 
 initializeFirebaseAdmin();
 
@@ -21,7 +21,7 @@ export async function GET(
   const url = new URL(req.url);
   const tenantType = url.searchParams.get('tenantType') as TenantType | null;
   const tenantId = url.searchParams.get('tenantId');
-  console.log('get request route', id, tenantType, tenantId);
+  const includeLog = url.searchParams.get('includeLog') === 'true';
 
   if (!tenantType || !tenantId) {
     return new NextResponse(
@@ -38,7 +38,6 @@ export async function GET(
 
   try {
     const doc = await requestRef.get();
-    console.log('is doc.exists', doc.exists);
 
     if (!doc.exists) {
       return new NextResponse(JSON.stringify({ error: 'Request not found' }), {
@@ -48,6 +47,7 @@ export async function GET(
     }
 
     const request = doc.data() as Request;
+    let response: Request | RequestWithLog = request;
 
     // Verify that the requester has permission to access this request
     if (
@@ -63,7 +63,19 @@ export async function GET(
       );
     }
 
-    return new NextResponse(JSON.stringify(request), {
+    if (includeLog) {
+      const logRef = db.collection('requestsLog').doc(request.logId);
+      const logDoc = await logRef.get();
+
+      if (logDoc.exists) {
+        response = {
+          ...response,
+          log: logDoc.data() as RequestLog,
+        };
+      }
+    }
+
+    return new NextResponse(JSON.stringify(response), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -84,14 +96,25 @@ export async function PATCH(
 ): Promise<NextResponse> {
   const db: Firestore = getFirestore();
   const { id } = params;
-  const updatedRequest: Partial<Request> = await req.json();
 
   try {
-    const requestsCollectionRef = db.collection('requests');
-    const docRef = requestsCollectionRef.doc(id);
-    const updateData = updatedRequest as unknown as UpdateData<DocumentData>;
+    const docRef = db.collection('requests').doc(id);
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return new NextResponse(JSON.stringify({ error: 'Request not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
-    await docRef.update(updateData);
+    const currentRequest = doc.data() as Request;
+    const updatedRequest: Partial<Request> = await req.json();
+    const changes = detectChanges(currentRequest, updatedRequest);
+
+    if (changes.length > 0) {
+      await updateRequestLog(currentRequest.logId, changes, req);
+      await docRef.update(updatedRequest);
+    }
 
     return new NextResponse(JSON.stringify({ success: true }), {
       status: 200,

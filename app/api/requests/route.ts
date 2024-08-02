@@ -1,8 +1,10 @@
+// file: app/api/requests/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
 import { parseErrorMessage } from '@/utils/helpers';
 import { Request, TenantType } from '@/lib/db/schema';
+import { createRequestLog } from '@/lib/firebase/logs';
 
 initializeFirebaseAdmin();
 
@@ -87,8 +89,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     for (const requestData of requests) {
       const docRef = db.collection('requests').doc();
-      batch.set(docRef, { ...requestData, id: docRef.id });
+      const logRef = db.collection('requestsLog').doc();
+      const fullRequest = {
+        ...requestData,
+        id: docRef.id,
+        logId: logRef.id,
+      };
+      batch.set(docRef, fullRequest);
       createdIds.push(docRef.id);
+      await createRequestLog(fullRequest);
     }
 
     await batch.commit();

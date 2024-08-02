@@ -30,6 +30,28 @@ export interface Request {
   rescueOfferText: string | null;
   declineReason: string | null;
   notes: string | null;
+  logId: string;
+}
+
+export interface RequestLog {
+  requestId: string;
+  changes: RequestChange[];
+}
+
+export interface RequestWithLog extends Request {
+  log: RequestLog;
+}
+
+export interface RequestChange {
+  field: string;
+  oldValue: string | number | boolean | null;
+  newValue: string | number | boolean | null;
+  changedBy: {
+    email: string;
+    tenantType: TenantType;
+    tenantId: string;
+  };
+  updatedAt: string; // ISO 8601 date string
 }
 
 export type TenantType = 'proxy' | 'provider';

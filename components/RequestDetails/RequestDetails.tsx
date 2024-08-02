@@ -3,10 +3,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { getRequest } from '@/lib/api/request';
 import { useAuth } from '@/hooks/useAuth';
-import { Request } from '@/lib/db/schema';
 import RequestActions from './RequestActions';
 import RequestCard from './RequestCard';
 import { useMemo, useReducer } from 'react';
+import RequestHistory from '../RequestHistory/RequestHistory';
 
 interface RequestDetailsProps {
   requestId: string;
@@ -16,9 +16,18 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestId }) => {
   const { userData } = useAuth();
   const { tenantType, tenantId } = userData || {};
 
-  const { data: request, error } = useQuery<Request>({
+  const {
+    data: request,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ['request', requestId, tenantType, tenantId],
-    queryFn: () => getRequest({ id: requestId, tenantType, tenantId }),
+    queryFn: () =>
+      getRequest({
+        id: requestId,
+        tenantType,
+        tenantId,
+      }),
     enabled: !!requestId && !!tenantType && !!tenantId,
   });
 
@@ -66,6 +75,7 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestId }) => {
               />
             )}
             <RequestCard request={request} />
+            <RequestHistory request={request} isLoading={isLoading} />
           </div>
         </div>
       </div>

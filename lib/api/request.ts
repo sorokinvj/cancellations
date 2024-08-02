@@ -1,16 +1,22 @@
-import { Request, RequestStatus } from '@/lib/db/schema';
+// file: app/api/request/route.ts
+import { Request, RequestStatus, RequestWithLog } from '@/lib/db/schema';
 
-export const getRequest = async ({
+export const getRequest = async <T extends boolean = true>({
   id,
   tenantType,
   tenantId,
+  includeLog = true as T,
 }: {
-  id: string;
+  id?: string;
   tenantType: string | undefined;
   tenantId: string | undefined;
-}) => {
+  includeLog?: T;
+}): Promise<T extends true ? RequestWithLog : Request> => {
+  if (!id) {
+    throw new Error('Request ID is required');
+  }
   const response = await fetch(
-    `/api/request/${id}?tenantType=${tenantType}&tenantId=${tenantId}`,
+    `/api/request/${id}?tenantType=${tenantType}&tenantId=${tenantId}&includeLog=${includeLog}`,
     {
       method: 'GET',
       headers: {
@@ -23,8 +29,8 @@ export const getRequest = async ({
     throw new Error('Failed to fetch request');
   }
 
-  const request = (await response.json()) as Request;
-  return request;
+  const data = await response.json();
+  return data as T extends true ? RequestWithLog : Request;
 };
 
 /**
@@ -67,7 +73,7 @@ interface PostRequestsResponse {
  * @throws {Error} If the request fails.
  */
 export async function postRequests(
-  requests: Omit<Request, 'id'>[],
+  requests: Omit<Request, 'id' | 'logId'>[],
 ): Promise<string[]> {
   const response = await fetch('/api/requests', {
     method: 'POST',

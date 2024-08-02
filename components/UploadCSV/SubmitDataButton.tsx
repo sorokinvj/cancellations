@@ -40,7 +40,7 @@ const SubmitDataButton = () => {
       return;
     }
 
-    const requests: Omit<Request, 'id'>[] = csv.data.map(row => {
+    const requests: Omit<Request, 'id' | 'logId'>[] = csv.data.map(row => {
       const customerInfo: { [key: string]: string } = {};
       for (const key in row) {
         if (Object.prototype.hasOwnProperty.call(row, key)) {

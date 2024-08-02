@@ -1,12 +1,14 @@
 // file: components/RequestDrawer/RequestDrawer.tsx
 'use client';
 import { useMemo, useReducer } from 'react';
-import { Request } from '@/lib/db/schema';
+import { Request, RequestWithLog } from '@/lib/db/schema';
 import RequestActions from '../RequestDetails/RequestActions';
 import RequestCard from '../RequestDetails/RequestCard';
 import { Drawer } from '../ui/drawer';
 import { useAuth } from '@/hooks/useAuth';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import RequestHistory from '../RequestHistory/RequestHistory';
+import { getRequest } from '@/lib/api/request';
 
 interface RequestDrawerProps {
   isOpen: boolean;
@@ -21,6 +23,13 @@ const RequestDrawer: React.FC<RequestDrawerProps> = ({
 }) => {
   const { userData } = useAuth();
   const { tenantType, tenantId } = userData || {};
+
+  const { data: requestWithLog, isLoading: isLogLoading } =
+    useQuery<RequestWithLog>({
+      queryKey: ['request', request?.id, tenantType, tenantId],
+      queryFn: () => getRequest({ id: request?.id, tenantType, tenantId }),
+      enabled: isOpen && !!request?.id && !!tenantType && !!tenantId,
+    });
 
   const isActionNeeded = useMemo(() => {
     return (
@@ -59,6 +68,7 @@ const RequestDrawer: React.FC<RequestDrawerProps> = ({
             />
           )}
           <RequestCard request={request} />
+          <RequestHistory request={requestWithLog} isLoading={isLogLoading} />
         </div>
       </div>
     </Drawer>

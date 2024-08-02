@@ -41,7 +41,7 @@ const RequestDetails: React.FC<{ request: Request | null }> = ({ request }) => {
       <div className="grid grid-cols-2 gap-x-8 gap-y-4">
         <div className="bg-white p-4 rounded-lg">
           <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl font-semibold">Request Information</h2>{' '}
+            <h2 className="text-xl font-semibold">Request Information</h2>
             <RequestStatus status={status} />
           </div>
           <InfoItem label="ID" value={id} />
