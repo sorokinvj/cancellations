@@ -47,7 +47,7 @@ const RequestsTable: FC<Props> = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
 
-  const toggleDrawer = (request?: Request) => {
+  const toggleDrawer = (request: Request) => {
     setIsDrawerOpen(prev => !prev);
     if (request) {
       setSelectedRequest(request);
@@ -201,13 +201,13 @@ const RequestsTable: FC<Props> = ({
         </thead>
         <tbody>
           {table.getRowModel().rows.map(row => (
-            <RequestRow key={row.id} row={row} />
+            <RequestRow key={row.id} row={row} toggleDrawer={toggleDrawer} />
           ))}
         </tbody>
       </table>
       <RequestDrawer
         isOpen={isDrawerOpen}
-        onClose={toggleDrawer}
+        onClose={() => setIsDrawerOpen(false)}
         request={selectedRequest}
       />
     </div>

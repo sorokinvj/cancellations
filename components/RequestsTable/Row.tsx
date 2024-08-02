@@ -5,18 +5,17 @@ import { Request } from '@/lib/db/schema';
 import { useForm, FormProvider } from 'react-hook-form';
 import { CustomColumnMeta } from '@/constants/app.types';
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
 
 interface RequestRowProps {
   row: Row<Request>;
+  toggleDrawer: (request: Request) => void;
 }
 
-const RequestRow: React.FC<RequestRowProps> = ({ row }) => {
+const RequestRow: React.FC<RequestRowProps> = ({ row, toggleDrawer }) => {
   const methods = useForm();
-  const router = useRouter();
 
   const handleRowClick = () => {
-    router.push(`/requests/${row.original.id}`);
+    toggleDrawer(row.original);
   };
 
   return (
