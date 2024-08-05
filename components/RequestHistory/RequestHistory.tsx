@@ -15,12 +15,7 @@ const RequestHistory: React.FC<RequestHistoryProps> = ({
   request,
   isLoading,
 }) => {
-  const tenantsColorMap = {
-    proxy: 'text-blue-500',
-    provider: 'text-purple-600',
-  };
-
-  const { items, uniqueTenants } = useTimelineItems(request);
+  const { items, titles } = useTimelineItems(request);
 
   if (!request) {
     return null;
@@ -34,17 +29,7 @@ const RequestHistory: React.FC<RequestHistoryProps> = ({
           <Spinner className="w-6 h-6 text-gray-500" color="gray" />
         )}
       </h2>
-      <div className="flex justify-around mb-8">
-        {uniqueTenants?.map(tenant => (
-          <div
-            key={tenant.id}
-            className={clsx(tenantsColorMap[tenant.type], 'font-bold')}
-          >
-            {tenant.name}
-          </div>
-        ))}
-      </div>
-      <Timeline items={items} dotAlignment="top" />
+      <Timeline items={items} dotAlignment="top" titles={titles} />
     </div>
   );
 };

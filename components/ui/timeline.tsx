@@ -9,21 +9,30 @@ export interface TimelineItemProps {
   side: 'left' | 'right';
   borderClass: string;
   status?: React.ReactNode;
+  isLast?: boolean;
+  dotAlignment: 'top' | 'center';
 }
 
 interface TimelineProps {
   items: TimelineItemProps[];
-  alternatingSides?: boolean;
   dotAlignment?: 'top' | 'center';
+  titles: { id: string; type: 'proxy' | 'provider'; name: string }[];
 }
 
-const TimelineItem: React.FC<
-  TimelineItemProps & { dotAlignment: 'top' | 'center' }
-> = ({ content, date, side, borderClass, dotAlignment = 'top', status }) => (
+const TimelineItem: React.FC<TimelineItemProps> = ({
+  content,
+  date,
+  side,
+  borderClass,
+  dotAlignment = 'top',
+  status,
+  isLast,
+}) => (
   <div
     className={clsx(
       'flex items-start mb-8',
       side === 'left' ? 'flex-row-reverse' : '',
+      isLast && 'relative', // Add relative positioning to the last item
     )}
   >
     <div
@@ -62,30 +71,63 @@ const TimelineItem: React.FC<
       className={clsx(
         `w-4 h-4 rounded-full bg-white ${borderClass} border-4 z-10`,
         {
-          'self-start mt-1.5': dotAlignment === 'top',
+          'self-start mt-1.5': dotAlignment === 'top' && !isLast,
           'self-center': dotAlignment === 'center',
           'mr-4': side === 'right',
           'ml-4': side === 'left',
         },
       )}
     />
+    {isLast && (
+      <div
+        className="absolute left-1/2 bottom-0 w-1 bg-white transform -translate-x-1/2"
+        style={{
+          height: 'calc(100% - 10px)',
+        }}
+      />
+    )}
     <div className="flex-1" />
   </div>
+);
+
+const VerticalLine: React.FC = () => (
+  <div
+    className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 transform -translate-x-1/2"
+    style={{
+      bottom: '2px',
+    }}
+  />
 );
 
 export const Timeline: React.FC<TimelineProps> = ({
   items,
   dotAlignment = 'top',
+  titles,
 }) => {
+  const tenantsColorMap = {
+    proxy: 'text-blue-500',
+    provider: 'text-purple-600',
+  };
+
   return (
     <div className="relative">
-      <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 transform -translate-x-1/2" />
-      {items.map(item => (
+      <div className="flex justify-between mb-8">
+        {titles.map(title => (
+          <div
+            key={title.id}
+            className={`w-1/2 text-center font-bold ${tenantsColorMap[title.type]}`}
+          >
+            {title.name}
+          </div>
+        ))}
+      </div>
+      <VerticalLine />
+      {items.map((item, index) => (
         <TimelineItem
           key={item.id}
           {...item}
-          side={item.side}
-          dotAlignment={dotAlignment}
+          dotAlignment={index === items.length - 1 ? 'top' : dotAlignment}
+          isLast={index === items.length - 1}
         />
       ))}
     </div>

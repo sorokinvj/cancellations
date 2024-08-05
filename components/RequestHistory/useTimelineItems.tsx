@@ -11,7 +11,7 @@ import useFirebase from '@/hooks/useFirebase';
 
 type useTimelineItemsReturn = {
   items: TimelineItemProps[];
-  uniqueTenants: { id: string; type: 'proxy' | 'provider'; name: string }[];
+  titles: { id: string; type: 'proxy' | 'provider'; name: string }[];
 };
 
 export const useTimelineItems = (
@@ -67,27 +67,28 @@ export const useTimelineItems = (
     collectionName: 'tenants',
   });
 
-  const uniqueTenants = useMemo(() => {
-    if (!request) return [];
+  const titles = useMemo(() => {
+    if (!request || !tenants) return [];
 
-    return request?.log.changes
-      .reduce(
-        (acc, change) => {
-          const { tenantId, tenantType } = change.changedBy;
-          if (!acc.some(tenant => tenant.id === tenantId)) {
-            const tenantName =
-              tenants?.find(t => t.id === tenantId)?.name || tenantId;
-            acc.push({ id: tenantId, type: tenantType, name: tenantName });
-          }
-          return acc;
-        },
-        [] as { id: string; type: 'proxy' | 'provider'; name: string }[],
-      )
-      .sort(a => (a.type === 'proxy' ? -1 : 1));
+    return [
+      {
+        id: request.proxyTenantId,
+        type: 'proxy' as const,
+        name:
+          tenants.find(t => t.id === request.proxyTenantId)?.name || 'Proxy',
+      },
+      {
+        id: request.providerTenantId,
+        type: 'provider' as const,
+        name:
+          tenants.find(t => t.id === request.providerTenantId)?.name ||
+          'Provider',
+      },
+    ];
   }, [request, tenants]);
 
   return {
     items,
-    uniqueTenants,
+    titles,
   };
 };
