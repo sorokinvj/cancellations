@@ -3,7 +3,6 @@ import React from 'react';
 import { Timeline } from '@/components/ui/timeline';
 import { RequestWithLog } from '@/lib/db/schema';
 import Spinner from '../ui/spinner';
-import clsx from 'clsx';
 import { useTimelineItems } from './useTimelineItems';
 
 interface RequestHistoryProps {
