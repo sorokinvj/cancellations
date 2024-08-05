@@ -58,17 +58,19 @@ const RequestDrawer: React.FC<RequestDrawerProps> = ({
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} title="Request Details">
-      <div className="flex h-screen flex-1 flex-col overflow-hidden">
-        <div className="flex flex-col space-y-4 h-full flex-1">
-          {isWidgetVisible && request && (
-            <RequestActions
-              action="fixDeclineReason"
-              request={request}
-              onFix={onFix}
-            />
-          )}
-          <RequestCard request={request} />
-          <RequestHistory request={requestWithLog} isLoading={isLogLoading} />
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 space-y-4">
+            {isWidgetVisible && request && (
+              <RequestActions
+                action="fixDeclineReason"
+                request={request}
+                onFix={onFix}
+              />
+            )}
+            <RequestCard request={request} />
+            <RequestHistory request={requestWithLog} isLoading={isLogLoading} />
+          </div>
         </div>
       </div>
     </Drawer>

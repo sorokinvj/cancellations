@@ -14,6 +14,8 @@ export type CustomerInfoField =
   | 'accountNumber'
   | 'lastFourCCDigits';
 
+export type CustomerInfo = { [K in CustomerInfoField]?: string };
+
 export interface Request {
   id: string;
   version: number;
@@ -24,7 +26,7 @@ export interface Request {
   dateResponded: string | null;
   proxyTenantId: string;
   providerTenantId: string;
-  customerInfo: { [K in CustomerInfoField]?: string };
+  customerInfo: CustomerInfo;
   successfullyResolved: boolean | null;
   rescueOffer: string | null;
   rescueOfferText: string | null;

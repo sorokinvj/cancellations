@@ -1,7 +1,11 @@
 // file: components/RequestsTable/RequestsTable.tsx
 'use client';
 import { FC, useState } from 'react';
-import { Request, RequestStatus as RequestStatusType } from '@/lib/db/schema';
+import {
+  Request,
+  RequestStatus as RequestStatusType,
+  Tenant,
+} from '@/lib/db/schema';
 import {
   useReactTable,
   getCoreRowModel,
@@ -134,10 +138,23 @@ const RequestsTable: FC<Props> = ({
       cell: ({
         getValue,
         cell,
+        row,
       }: {
         getValue: () => string;
         cell: Cell<Request, string>;
-      }) => (isProviderUser ? <DeclineReasonCell cell={cell} /> : getValue()),
+        row: Row<Request>;
+      }) => {
+        if (isProviderUser) {
+          const provider = tenants?.find(
+            tenant => tenant.id === row.original.providerTenantId,
+          );
+          return (
+            <DeclineReasonCell cell={cell} provider={provider as Tenant} />
+          );
+        }
+
+        return getValue();
+      },
     },
     ...(isProviderUser
       ? [

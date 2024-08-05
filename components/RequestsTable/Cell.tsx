@@ -3,11 +3,12 @@ import { formatDate } from '@/utils/helpers';
 import { User, Network } from 'lucide-react';
 import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
 import { Cell } from '@tanstack/react-table';
-import { Request } from '@/lib/db/schema';
+import { Request, Tenant } from '@/lib/db/schema';
 import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
 import Spinner from '../ui/spinner';
+import { getDisplayHeader } from '../UploadCSV/upload.utils';
 
 export type CellProps<R, T> = {
   cell: Cell<R, T>;
@@ -126,7 +127,10 @@ const RequestTypeCell: FC<CellProps<Request, 'Cancellation'>> = ({ cell }) => {
   );
 };
 
-const DeclineReasonCell: FC<CellProps<Request, string>> = ({ cell }) => {
+type DeclineReasonCellProps = CellProps<Request, string> & {
+  provider?: Tenant;
+};
+const DeclineReasonCell: FC<DeclineReasonCellProps> = ({ cell, provider }) => {
   const {
     control,
     formState: { errors },
@@ -135,17 +139,16 @@ const DeclineReasonCell: FC<CellProps<Request, string>> = ({ cell }) => {
   } = useFormContext();
 
   const declineReason = cell.getValue();
-  const options = [
-    'Wrong Customer Name',
-    'Wrong Customer Email',
-    'Wrong Account Number',
-    'Wrong Last 4 CC Digits',
-  ];
+  const options = provider?.requiredCustomerInfo?.map(
+    field => 'Wrong ' + getDisplayHeader(field),
+  );
 
   const handleChange = (value: string) => {
     clearErrors('declineReason');
     setValue('declineReason', value);
   };
+
+  if (!options) return null;
 
   return (
     <div onClick={e => e.stopPropagation()}>
