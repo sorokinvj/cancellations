@@ -1,42 +1,92 @@
-// file: components/Timeline/Timeline.tsx
+// components/ui/timeline.tsx
 import React from 'react';
+import clsx from 'clsx';
 
-export interface TimelineItem {
+export interface TimelineItemProps {
   id: string;
   content: React.ReactNode;
   date: string;
   side: 'left' | 'right';
   color: string;
+  status?: React.ReactNode;
 }
 
 interface TimelineProps {
-  items: TimelineItem[];
+  items: TimelineItemProps[];
+  alternatingSides?: boolean;
+  dotAlignment?: 'top' | 'center';
 }
 
-export const Timeline: React.FC<TimelineProps> = ({ items }) => {
+const TimelineItem: React.FC<
+  TimelineItemProps & { dotAlignment: 'top' | 'center' }
+> = ({ content, date, side, color, dotAlignment = 'top', status }) => (
+  <div
+    className={clsx(
+      'flex items-start mb-8',
+      side === 'left' ? 'flex-row-reverse' : '',
+    )}
+  >
+    <div
+      className={clsx(
+        'flex-1 flex flex-col gap-2',
+        side === 'left' ? 'text-right pl-4' : 'pr-4',
+      )}
+    >
+      {status && (
+        <div
+          className={clsx(
+            side === 'left' ? 'text-left pl-3' : 'text-right pr-3',
+          )}
+        >
+          {status}
+        </div>
+      )}
+      <div
+        className={clsx(
+          '',
+          side === 'left' ? 'pl-4  text-left' : 'pr-4 text-right',
+        )}
+      >
+        {content}
+      </div>
+      <div
+        className={clsx(
+          'text-sm text-gray-500',
+          side === 'left' ? 'pl-4 text-left' : 'pr-4 text-right',
+        )}
+      >
+        {date}
+      </div>
+    </div>
+    <div
+      className={clsx(
+        `w-4 h-4 rounded-full bg-white border-${color}-500 border-4 z-10`,
+        {
+          'self-start mt-1.5': dotAlignment === 'top',
+          'self-center': dotAlignment === 'center',
+          'mr-4': side === 'right',
+          'ml-4': side === 'left',
+        },
+      )}
+    />
+    <div className="flex-1" />
+  </div>
+);
+
+export const Timeline: React.FC<TimelineProps> = ({
+  items,
+  dotAlignment = 'top',
+}) => {
   return (
     <div className="relative">
-      {/* Vertical line */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 transform -translate-x-1/2"></div>
-
+      <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 transform -translate-x-1/2" />
       {items.map(item => (
-        <div
+        <TimelineItem
           key={item.id}
-          className={`flex items-center mb-8 ${item.side === 'left' ? 'flex-row-reverse' : ''}`}
-        >
-          <div
-            className={`flex-1 ${item.side === 'left' ? 'text-right pr-4' : 'pl-4'}`}
-          >
-            <div className="p-4 bg-white rounded shadow">
-              {item.content}
-              <div className="mt-2 text-sm text-gray-500">{item.date}</div>
-            </div>
-          </div>
-          <div
-            className={`w-4 h-4 rounded-full bg-${item.color}-500 border-4 border-white z-10`}
-          />
-          <div className="flex-1"></div>
-        </div>
+          {...item}
+          side={item.side}
+          dotAlignment={dotAlignment}
+        />
       ))}
     </div>
   );
