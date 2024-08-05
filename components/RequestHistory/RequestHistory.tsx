@@ -16,8 +16,8 @@ const RequestHistory: React.FC<RequestHistoryProps> = ({
   isLoading,
 }) => {
   const tenantsColorMap = {
-    proxy: 'text-violet-600',
-    provider: 'text-green-600',
+    proxy: 'text-blue-500',
+    provider: 'text-purple-600',
   };
 
   const { items, uniqueTenants } = useTimelineItems(request);

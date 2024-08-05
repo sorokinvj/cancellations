@@ -19,8 +19,8 @@ export const useTimelineItems = (
 ): useTimelineItemsReturn => {
   const items = useMemo(() => {
     const dotsMap = {
-      proxy: 'border-violet-500',
-      provider: 'border-green-500',
+      proxy: 'border-blue-500',
+      provider: 'border-purple-600',
     };
     if (!request) return [];
 

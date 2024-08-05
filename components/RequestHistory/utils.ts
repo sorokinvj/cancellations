@@ -8,6 +8,8 @@ export type ChangeGroup = {
   changes: RequestChange[];
 };
 
+type ValueType = CustomerInfo | string | number | boolean | null;
+
 export const groupChanges = (changes: RequestChange[]): ChangeGroup[] => {
   return changes.reduce((groups: ChangeGroup[], change) => {
     const lastGroup = groups[groups.length - 1];
@@ -26,16 +28,19 @@ export const groupChanges = (changes: RequestChange[]): ChangeGroup[] => {
 
 export const renderHistoryTitle = (group: ChangeGroup): string => {
   const { changedBy, changes } = group;
-  if (
+  const isFirstChange =
     changes.length === 1 &&
     changes[0].field === 'status' &&
-    changes[0].newValue === 'Pending'
-  ) {
+    changes[0].newValue === 'Pending';
+
+  if (isFirstChange) {
     return `Request created by ${changedBy}`;
   }
+
   const declineReasonChange = changes.find(
     change => change.field === 'declineReason',
   );
+
   if (declineReasonChange) {
     if (
       declineReasonChange.oldValue === null &&
@@ -49,16 +54,16 @@ export const renderHistoryTitle = (group: ChangeGroup): string => {
       return `Request issue resolved by ${changedBy}`;
     }
   }
+
   const successfullyResolvedChange = changes.find(
     change => change.field === 'successfullyResolved',
   );
+
   if (successfullyResolvedChange && successfullyResolvedChange.newValue) {
     return `Request successfully resolved by ${changedBy}`;
   }
   return `${changes.length} changes made by ${changedBy}`;
 };
-
-type ValueType = CustomerInfo | string | number | boolean | null;
 
 export const contentMapByField: Partial<
   Record<
