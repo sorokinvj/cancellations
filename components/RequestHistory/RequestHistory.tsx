@@ -108,17 +108,19 @@ const RequestHistory: React.FC<RequestHistoryProps> = ({
   }, [request]);
 
   if (!request) {
-    return <div>No history available</div>;
+    return null;
   }
 
   return (
     <div className="p-4 rounded-lg">
-      <h2 className="text-xl font-semibold">Request History</h2>
-      {isLoading ? (
-        <Spinner className="w-12 " color="blue" />
-      ) : (
-        <Timeline items={timelineItems} dotAlignment="top" />
-      )}
+      <h2 className="text-xl font-semibold flex items-center gap-2">
+        {isLoading ? 'Request History is loading...' : 'Request History'}
+        {isLoading && (
+          <Spinner className="w-6 h-6 text-gray-500" color="gray" />
+        )}
+      </h2>
+
+      <Timeline items={timelineItems} dotAlignment="top" />
     </div>
   );
 };

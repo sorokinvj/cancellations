@@ -134,10 +134,21 @@ const RequestsTable: FC<Props> = ({
       cell: ({
         getValue,
         cell,
+        row,
       }: {
         getValue: () => string;
         cell: Cell<Request, string>;
-      }) => (isProviderUser ? <DeclineReasonCell cell={cell} /> : getValue()),
+        row: Row<Request>;
+      }) => {
+        if (isProviderUser) {
+          const provider = tenants?.find(
+            tenant => tenant.id === row.original.providerTenantId,
+          );
+          return <DeclineReasonCell cell={cell} provider={provider} />;
+        }
+
+        return getValue();
+      },
     },
     ...(isProviderUser
       ? [
