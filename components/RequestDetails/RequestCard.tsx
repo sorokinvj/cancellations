@@ -31,6 +31,7 @@ const RequestDetails: React.FC<{ request: Request | null }> = ({ request }) => {
     rescueOfferText,
     declineReason,
     notes,
+    logId,
   } = request;
 
   const hasAdditonalDetails =
@@ -45,7 +46,7 @@ const RequestDetails: React.FC<{ request: Request | null }> = ({ request }) => {
             <RequestStatus status={status} />
           </div>
           <InfoItem label="ID" value={id} />
-
+          <InfoItem label="LogId" value={logId} />
           <InfoItem label="Request Type" value={requestType} />
           <InfoItem label="Submitted By" value={submittedBy} />
           <InfoItem label="Date Submitted" value={formatDate(dateSubmitted)} />

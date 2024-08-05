@@ -7,7 +7,7 @@ export interface TimelineItemProps {
   content: React.ReactNode;
   date: string;
   side: 'left' | 'right';
-  color: string;
+  borderClass: string;
   status?: React.ReactNode;
 }
 
@@ -19,7 +19,7 @@ interface TimelineProps {
 
 const TimelineItem: React.FC<
   TimelineItemProps & { dotAlignment: 'top' | 'center' }
-> = ({ content, date, side, color, dotAlignment = 'top', status }) => (
+> = ({ content, date, side, borderClass, dotAlignment = 'top', status }) => (
   <div
     className={clsx(
       'flex items-start mb-8',
@@ -60,7 +60,7 @@ const TimelineItem: React.FC<
     </div>
     <div
       className={clsx(
-        `w-4 h-4 rounded-full bg-white border-${color}-500 border-4 z-10`,
+        `w-4 h-4 rounded-full bg-white ${borderClass} border-4 z-10`,
         {
           'self-start mt-1.5': dotAlignment === 'top',
           'self-center': dotAlignment === 'center',
