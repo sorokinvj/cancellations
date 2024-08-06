@@ -22,6 +22,7 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
   const {
     watch,
     formState: { errors },
+    reset,
   } = useFormContext();
   const queryClient = useQueryClient();
   const { userData } = useAuth();
@@ -37,6 +38,7 @@ const ResolveModal: FC<Props> = ({ shown, request, closeModal }) => {
           queryKey: ['requests', userData.tenantType, userData.tenantId],
         });
       }
+      reset();
       closeModal();
     },
     onError: error => {
