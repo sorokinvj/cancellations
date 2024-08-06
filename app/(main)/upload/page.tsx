@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function UploadPage() {
   return (
     <UploadCSVProvider>
-      <UploadCSV />;
+      <UploadCSV />
     </UploadCSVProvider>
   );
 }

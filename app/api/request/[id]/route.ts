@@ -8,7 +8,7 @@ import {
   RequestWithLog,
   TenantType,
 } from '@/lib/db/schema';
-import { parseErrorMessage } from '@/utils/helpers';
+import { parseErrorMessage } from '@/utils/general';
 import { detectChanges, updateRequestLog } from '@/lib/firebase/logs';
 
 initializeFirebaseAdmin();

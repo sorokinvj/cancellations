@@ -132,7 +132,7 @@ const Overview: React.FC = () => {
     <>
       <div className="flex w-full bg-white">
         {/* Main View */}
-        <div className="flex h-screen flex-1 flex-col overflow-hidden">
+        <div className="flex h-full flex-1 flex-col overflow-hidden">
           {/* Row: Header */}
           <div className="flex h-[72px] flex-none items-center gap-2 border-b bg-white px-[20px]">
             <div className="text-2xl font-bold">Overview</div>

@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { getDisplayHeader } from './upload.utils';
+import { getDisplayHeader } from '@/utils/template.utils';
 
 const UploadTable: FC = () => {
   const { csv } = useUpload();

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import Spinner from '../ui/spinner';
-import { getDisplayHeader } from '../UploadCSV/upload.utils';
+import { getDisplayHeader } from '@/utils/template.utils';
 
 const FixCustomerInfo: React.FC<{
   request: Request;

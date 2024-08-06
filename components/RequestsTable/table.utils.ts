@@ -1,4 +1,4 @@
-import { getDisplayHeader } from '../UploadCSV/upload.utils';
+import { getDisplayHeader } from '@/utils/template.utils';
 import { UsernameCell } from './Cell';
 import { Request } from '@/lib/db/schema';
 

@@ -78,7 +78,7 @@ const SubmitDataButton = () => {
       <Button
         onClick={handleSubmit}
         disabled={mutation.isPending}
-        className={`font-bold py-2 px-4 rounded ${
+        className={`ml-2 font-bold py-2 px-4 rounded ${
           mutation.isPending
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-blue-500 hover:bg-blue-700 text-white'

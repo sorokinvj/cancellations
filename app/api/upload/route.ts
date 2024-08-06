@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CsvError, parse } from 'csv-parse';
 import { StructuredCSVResponse } from '@/components/UploadCSV/upload.types';
+import { getCustomerInfoField } from '@/utils/template.utils';
+import { CustomerInfoField } from '@/lib/db/schema';
 
 const CSV_DELIMITER = [',', ';', '|', ':', '\t'];
 const MAX_NUMBER_OF_ROWS = 500;
@@ -81,10 +83,33 @@ export async function POST(request: NextRequest): Promise<void | Response> {
               ),
             );
           }
-          const headers = results[0];
+          function isCustomerInfoField(
+            value: CustomerInfoField | undefined,
+          ): value is CustomerInfoField {
+            return value !== undefined;
+          }
+
+          const headers = results[0].map(getCustomerInfoField);
+          const validHeaders = headers.filter(isCustomerInfoField);
+
+          if (validHeaders.length !== headers.length) {
+            return resolve(
+              NextResponse.json(
+                {
+                  status: 'error',
+                  error:
+                    'One or more header names are incorrect. Please check the CSV file headers and try again.',
+                  headers: [],
+                  data: [],
+                },
+                { status: 400 },
+              ),
+            );
+          }
+
           const data = results.slice(1).map(row => {
             const rowData: Record<string, string> = {};
-            headers.forEach((header, index) => {
+            validHeaders.forEach((header, index) => {
               rowData[header] = row[index] || '';
             });
             return rowData;
@@ -93,7 +118,7 @@ export async function POST(request: NextRequest): Promise<void | Response> {
           const response: StructuredCSVResponse = {
             status: 'success',
             error: null,
-            headers,
+            headers: validHeaders,
             data,
           };
           return resolve(NextResponse.json(response, { status: 200 }));

@@ -13,3 +13,16 @@ export const getDisplayHeader = (header: string): string => {
     ? CUSTOMER_INFO_HEADERS_MAP[header as CustomerInfoField]
     : header;
 };
+
+export const getCustomerInfoField = (
+  name: string,
+): CustomerInfoField | undefined => {
+  const entry = Object.entries(CUSTOMER_INFO_HEADERS_MAP).find(
+    ([_, value]) => value === name,
+  );
+  return entry ? (entry[0] as CustomerInfoField) : undefined;
+};
+
+export const generateHeaders = (headers: string[]) => {
+  return headers.map(getDisplayHeader).join(',');
+};

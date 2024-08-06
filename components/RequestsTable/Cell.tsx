@@ -1,5 +1,5 @@
 // file: components/RequestsTable/Cell.tsx
-import { formatDate } from '@/utils/helpers';
+import { formatDate } from '@/utils/general';
 import { User, Network } from 'lucide-react';
 import { Radio, RadioGroup, RadioField } from '@/components/ui/radio';
 import { Cell } from '@tanstack/react-table';
@@ -8,7 +8,7 @@ import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
 import Spinner from '../ui/spinner';
-import { getDisplayHeader } from '../UploadCSV/upload.utils';
+import { getDisplayHeader } from '@/utils/template.utils';
 
 export type CellProps<R, T> = {
   cell: Cell<R, T>;

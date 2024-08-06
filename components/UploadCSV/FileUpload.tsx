@@ -12,6 +12,7 @@ import Spinner from '@/components/ui/spinner';
 import UploadErrors from './UploadErrors';
 import { SelectItem, Select as SelectTremor } from '@tremor/react';
 import useFirebase from '@/hooks/useFirebase';
+import { generateHeaders } from '@/utils/template.utils';
 
 const FileUpload: FC = () => {
   const {
@@ -30,7 +31,7 @@ const FileUpload: FC = () => {
   const hasValidationError = csv?.status === 'error';
   const csvValidationErrorMessage = hasValidationError ? csv?.error : undefined;
 
-  const { data: providersData, loading: providersLoading } = useFirebase({
+  const { data: tenants, loading: providersLoading } = useFirebase({
     collectionName: 'tenants',
     filterBy: 'type',
     filterValue: 'provider',
@@ -77,24 +78,19 @@ const FileUpload: FC = () => {
   };
 
   const generateCSVTemplate = useCallback(() => {
-    if (!selectedProviderId || !providersData) return '';
+    if (!selectedProviderId || !tenants) return '';
 
-    const selectedProvider = providersData.find(
-      p => p.id === selectedProviderId,
-    );
+    const selectedProvider = tenants.find(p => p.id === selectedProviderId);
     if (!selectedProvider || !selectedProvider.requiredCustomerInfo) return '';
 
-    const headers = selectedProvider.requiredCustomerInfo.join(',');
-    return headers;
-  }, [selectedProviderId, providersData]);
+    return generateHeaders(selectedProvider.requiredCustomerInfo);
+  }, [selectedProviderId, tenants]);
 
   const handleDownloadTemplate = useCallback(() => {
     const csvContent = generateCSVTemplate();
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
-    const providerName = providersData?.find(
-      p => p.id === selectedProviderId,
-    )?.name;
+    const providerName = tenants?.find(p => p.id === selectedProviderId)?.name;
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
@@ -104,7 +100,7 @@ const FileUpload: FC = () => {
       link.click();
       document.body.removeChild(link);
     }
-  }, [generateCSVTemplate, selectedProviderId, providersData]);
+  }, [generateCSVTemplate, selectedProviderId, tenants]);
 
   return (
     <div className="max-w-xl w-full">
@@ -117,7 +113,7 @@ const FileUpload: FC = () => {
           placeholder="Select a provider"
           onValueChange={handleSelectProvider}
         >
-          {providersData?.map(tenant => (
+          {tenants?.map(tenant => (
             <SelectItem value={tenant.id} key={tenant.id}>
               {tenant.name}
             </SelectItem>
@@ -125,7 +121,7 @@ const FileUpload: FC = () => {
         </SelectTremor>
         <Text>
           Upload a CSV file with the refund data. Make sure your CSV file
-          follows the required format.{' '}
+          follows the required format.
         </Text>
         <Button
           onClick={handleDownloadTemplate}

@@ -1,4 +1,4 @@
-import { getRandomNumber } from '@/utils/helpers';
+import { getRandomNumber } from '@/utils/general';
 import { ChartData } from 'chart.js';
 import { ComponentProps } from 'react';
 import { Bar, Line } from 'react-chartjs-2';

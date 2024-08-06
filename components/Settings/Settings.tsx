@@ -72,7 +72,7 @@ const Settings: React.FC = () => {
   return (
     <div className="flex w-full">
       {/* Main View */}
-      <div className="flex h-screen flex-1 flex-col overflow-hidden">
+      <div className="flex h-full flex-1 flex-col overflow-hidden">
         {/* Row: Header */}
         <div className="flex h-[72px] flex-none items-center border-b bg-white px-[20px]">
           <div className="text-[24px] font-bold">Settings</div>

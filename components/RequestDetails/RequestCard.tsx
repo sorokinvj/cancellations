@@ -1,6 +1,6 @@
 import { Request } from '@/lib/db/schema';
-import { formatDate } from '@/utils/helpers';
-import { getDisplayHeader } from '../UploadCSV/upload.utils';
+import { formatDate } from '@/utils/general';
+import { getDisplayHeader } from '@/utils/template.utils';
 import RequestStatus from '../RequestStatus/RequestStatus';
 import useFirebase from '@/hooks/useFirebase';
 import Spinner from '../ui/spinner';

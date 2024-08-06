@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
 import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
-import { parseErrorMessage } from '@/utils/helpers';
+import { parseErrorMessage } from '@/utils/general';
 import { Request, TenantType } from '@/lib/db/schema';
 import { createRequestLog } from '@/lib/firebase/logs';
 

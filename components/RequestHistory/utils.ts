@@ -1,5 +1,5 @@
 import { CustomerInfo, RequestChange } from '@/lib/db/schema';
-import { getDisplayHeader } from '../UploadCSV/upload.utils';
+import { getDisplayHeader } from '@/utils/template.utils';
 import { Request } from '@/lib/db/schema';
 
 export type ChangeGroup = {
