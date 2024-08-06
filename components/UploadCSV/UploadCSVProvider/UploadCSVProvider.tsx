@@ -19,7 +19,6 @@ export const UploadCSVContext = createContext<{
 
 export const UploadCSVProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
-  console.log('state', state);
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
   return (

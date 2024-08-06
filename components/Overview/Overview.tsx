@@ -129,151 +129,149 @@ const Overview: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="flex w-full bg-white">
-        {/* Main View */}
-        <div className="flex h-full flex-1 flex-col overflow-hidden">
-          {/* Row: Header */}
-          <div className="flex h-[72px] flex-none items-center gap-2 border-b bg-white px-[20px]">
-            <div className="text-2xl font-bold">Overview</div>
-            <div className="flex-1" />
-            <DateRangePicker className="w-30 z-30" />
-            <SelectTremor
-              enableClear={false}
-              className="z-30 w-52"
-              defaultValue="1"
-            >
-              <SelectItem value="1">All Sources</SelectItem>
-            </SelectTremor>
-            <SelectTremor
-              enableClear={false}
-              className="z-30 w-52"
-              defaultValue="1"
-            >
-              <SelectItem value="1">All Request Types</SelectItem>
-            </SelectTremor>
-          </div>
-          {/* Row: Content */}
-          <div className="flex flex-1 overflow-scroll">
-            <div className="relative h-full w-full overflow-hidden">
-              <img
-                src="/images/purple-gradient.svg"
-                className="absolute right-0 top-0 h-[600px]"
-                alt="Purple gradient"
-              />
-              <div className="absolute z-10 mx-auto h-full w-full max-w-[1600px] overflow-scroll p-8">
-                <div className="mb-3 text-2xl">👋 Hello, {userData?.name}</div>
-                {/* Stats */}
-                <div className="mb-10">
-                  <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-5">
-                    {stats.map(item => (
-                      <div
-                        key={item.name}
-                        className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
-                      >
-                        <div className="flex items-center">
-                          <div className="flex-1">
-                            <dt className="truncate text-sm font-medium text-gray-500">
-                              {item.name}
-                            </dt>
-                            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                              {item.stat}
-                            </dd>
-                          </div>
-                          <div className="">{item.donut}</div>
+    <div className="flex w-full h-full bg-white">
+      {/* Main View */}
+      <div className="flex h-full flex-1 flex-col overflow-hidden">
+        {/* Row: Header */}
+        <div className="flex h-[72px] flex-none items-center gap-2 border-b bg-white px-[20px]">
+          <div className="text-2xl font-bold">Overview</div>
+          <div className="flex-1" />
+          <DateRangePicker className="w-30 z-30" />
+          <SelectTremor
+            enableClear={false}
+            className="z-30 w-52"
+            defaultValue="1"
+          >
+            <SelectItem value="1">All Sources</SelectItem>
+          </SelectTremor>
+          <SelectTremor
+            enableClear={false}
+            className="z-30 w-52"
+            defaultValue="1"
+          >
+            <SelectItem value="1">All Request Types</SelectItem>
+          </SelectTremor>
+        </div>
+        {/* Row: Content */}
+        <div className="flex flex-1 overflow-scroll">
+          <div className="relative h-full w-full overflow-hidden">
+            <img
+              src="/images/purple-gradient.svg"
+              className="absolute right-0 top-0 h-[600px]"
+              alt="Purple gradient"
+            />
+            <div className="absolute z-10 mx-auto h-full w-full max-w-[1600px] overflow-scroll p-8">
+              <div className="mb-3 text-2xl">👋 Hello, {userData?.name}</div>
+              {/* Stats */}
+              <div className="mb-10">
+                <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-5">
+                  {stats.map(item => (
+                    <div
+                      key={item.name}
+                      className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+                    >
+                      <div className="flex items-center">
+                        <div className="flex-1">
+                          <dt className="truncate text-sm font-medium text-gray-500">
+                            {item.name}
+                          </dt>
+                          <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                            {item.stat}
+                          </dd>
                         </div>
+                        <div className="">{item.donut}</div>
                       </div>
-                    ))}
-                  </dl>
-                </div>
+                    </div>
+                  ))}
+                </dl>
+              </div>
 
-                {/* Chart */}
-                <div className="flex gap-5">
-                  <div className="mb-10 flex-[2] overflow-hidden rounded-lg bg-white shadow">
-                    <div className="px-4 py-5 sm:p-6">
-                      <div>
-                        <div className="mb-2 text-lg font-medium">
-                          Request Volume by Day
-                        </div>
+              {/* Chart */}
+              <div className="flex gap-5">
+                <div className="mb-10 flex-[2] overflow-hidden rounded-lg bg-white shadow">
+                  <div className="px-4 py-5 sm:p-6">
+                    <div>
+                      <div className="mb-2 text-lg font-medium">
+                        Request Volume by Day
                       </div>
-                      <div className="flex min-h-80 items-center justify-center">
-                        <Bar
-                          options={callsBarChartOptions}
-                          data={callsBarChartData}
-                        />
+                    </div>
+                    <div className="flex min-h-80 items-center justify-center">
+                      <Bar
+                        options={callsBarChartOptions}
+                        data={callsBarChartData}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Chart Row 2 */}
+              <div className="flex gap-5">
+                <div className="mb-10 flex flex-[1] overflow-hidden rounded-lg bg-white shadow">
+                  <div className="flex w-full flex-col px-4 py-5 sm:p-6">
+                    <div className="mb-4 flex items-center gap-2">
+                      <div className="text-lg font-medium">
+                        Avg Request Volume by Time of the Day
                       </div>
+                      <div className="flex-1" />
+                    </div>
+                    <div className="flex-1">
+                      <Line
+                        options={freqBarChartOptions}
+                        data={freqBarChartData}
+                      />
                     </div>
                   </div>
                 </div>
 
-                {/* Chart Row 2 */}
-                <div className="flex gap-5">
-                  <div className="mb-10 flex flex-[1] overflow-hidden rounded-lg bg-white shadow">
-                    <div className="flex w-full flex-col px-4 py-5 sm:p-6">
-                      <div className="mb-4 flex items-center gap-2">
-                        <div className="text-lg font-medium">
-                          Avg Request Volume by Time of the Day
-                        </div>
-                        <div className="flex-1" />
+                <div className="mb-10 flex h-[350px] flex-[1] overflow-hidden rounded-lg bg-white shadow">
+                  <div className="flex flex-1 flex-col px-4 py-5 sm:p-6">
+                    <div>
+                      <div className="mb-2 text-lg font-medium">Sources</div>
+                    </div>
+
+                    <div className="flex flex-1 items-center gap-3">
+                      <div className="flex-1">
+                        <DonutChart
+                          data={data}
+                          category="amount"
+                          index="name"
+                          valueFormatter={currencyFormatter}
+                          showTooltip={false}
+                          colors={['orange', 'blue', 'red', 'purple', 'gray']}
+                        />
                       </div>
                       <div className="flex-1">
-                        <Line
-                          options={freqBarChartOptions}
-                          data={freqBarChartData}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mb-10 flex h-[350px] flex-[1] overflow-hidden rounded-lg bg-white shadow">
-                    <div className="flex flex-1 flex-col px-4 py-5 sm:p-6">
-                      <div>
-                        <div className="mb-2 text-lg font-medium">Sources</div>
-                      </div>
-
-                      <div className="flex flex-1 items-center gap-3">
-                        <div className="flex-1">
-                          <DonutChart
-                            data={data}
-                            category="amount"
-                            index="name"
-                            valueFormatter={currencyFormatter}
-                            showTooltip={false}
-                            colors={['orange', 'blue', 'red', 'purple', 'gray']}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-tremor-label text-tremor-content dark:text-dark-tremor-content flex items-center justify-between">
-                            <span>Category</span>
-                            <span>Amount / Share</span>
-                          </p>
-                          <List className="">
-                            {data.map(item => (
-                              <ListItem key={item.name} className="space-x-6">
-                                <div className="flex items-center space-x-2.5 truncate">
-                                  <span
-                                    className={clsx(
-                                      item.color,
-                                      'h-2.5 w-2.5 shrink-0 rounded-sm',
-                                    )}
-                                    aria-hidden={true}
-                                  />
-                                  <span className="dark:text-dark-tremor-content-emphasis truncate">
-                                    {item.name}
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium tabular-nums">
-                                    {item.amount}
-                                  </span>
-                                  <span className="rounded-tremor-small bg-tremor-background-subtle text-tremor-label text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis px-1.5 py-0.5 font-medium tabular-nums">
-                                    {item.share}
-                                  </span>
-                                </div>
-                              </ListItem>
-                            ))}
-                          </List>
-                        </div>
+                        <p className="text-tremor-label text-tremor-content dark:text-dark-tremor-content flex items-center justify-between">
+                          <span>Category</span>
+                          <span>Amount / Share</span>
+                        </p>
+                        <List className="">
+                          {data.map(item => (
+                            <ListItem key={item.name} className="space-x-6">
+                              <div className="flex items-center space-x-2.5 truncate">
+                                <span
+                                  className={clsx(
+                                    item.color,
+                                    'h-2.5 w-2.5 shrink-0 rounded-sm',
+                                  )}
+                                  aria-hidden={true}
+                                />
+                                <span className="dark:text-dark-tremor-content-emphasis truncate">
+                                  {item.name}
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium tabular-nums">
+                                  {item.amount}
+                                </span>
+                                <span className="rounded-tremor-small bg-tremor-background-subtle text-tremor-label text-tremor-content-emphasis dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-emphasis px-1.5 py-0.5 font-medium tabular-nums">
+                                  {item.share}
+                                </span>
+                              </div>
+                            </ListItem>
+                          ))}
+                        </List>
                       </div>
                     </div>
                   </div>
@@ -283,7 +281,7 @@ const Overview: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
