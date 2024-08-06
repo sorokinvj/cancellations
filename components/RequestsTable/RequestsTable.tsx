@@ -31,17 +31,21 @@ import RequestStatus from '../RequestStatus/RequestStatus';
 import { Button } from '@/components/ui/button';
 import RequestDrawer from '../RequestDetails/RequestDrawer';
 import EmptyRequestsState from './EmptyTable';
+import { FaCheckCircle } from 'react-icons/fa';
+import { FaCircleXmark } from 'react-icons/fa6';
 
 interface Props {
   requests: Request[];
   hasFixButton?: boolean;
   EmptyComponent?: React.ComponentType;
+  isReadOnly?: boolean;
 }
 
 const RequestsTable: FC<Props> = ({
   requests,
   hasFixButton,
   EmptyComponent = EmptyRequestsState,
+  isReadOnly,
 }) => {
   const { userData } = useAuth();
   const isProviderUser = userData?.tenantType === 'provider';
@@ -123,15 +127,37 @@ const RequestsTable: FC<Props> = ({
       cell: DateCell,
     },
     ...customerInfoColumns,
-    ...(isProviderUser
-      ? [
-          {
-            header: 'Successfully Resolved',
-            accessorKey: 'successfullyResolved',
-            cell: ResolveCell,
-          },
-        ]
-      : []),
+    {
+      header: 'Successfully Resolved',
+      className: 'text-center', // This centers the header text
+      accessorKey: 'successfullyResolved',
+      cell: ({
+        getValue,
+        cell,
+      }: {
+        getValue: () => string;
+        cell: Cell<Request, boolean>;
+        row: Row<Request>;
+      }) => {
+        if (isProviderUser && !isReadOnly) {
+          return <ResolveCell cell={cell} />;
+        }
+        const value = getValue();
+        if (value === null) {
+          return null; // Return null for empty cell
+        }
+        return (
+          <div className="flex justify-center items-center w-full h-full">
+            {value ? (
+              <FaCheckCircle className="text-green-500 text-2xl" />
+            ) : (
+              <FaCircleXmark className="text-red-500 text-2xl" />
+            )}
+          </div>
+        );
+      },
+    },
+
     {
       header: 'Decline Reason',
       accessorKey: 'declineReason',
@@ -144,7 +170,7 @@ const RequestsTable: FC<Props> = ({
         cell: Cell<Request, string>;
         row: Row<Request>;
       }) => {
-        if (isProviderUser) {
+        if (isProviderUser && !isReadOnly) {
           const provider = tenants?.find(
             tenant => tenant.id === row.original.providerTenantId,
           );
@@ -156,7 +182,7 @@ const RequestsTable: FC<Props> = ({
         return getValue();
       },
     },
-    ...(isProviderUser
+    ...(isProviderUser && !isReadOnly
       ? [
           {
             id: 'Actions',

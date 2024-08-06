@@ -36,7 +36,7 @@ export default function ClientLayout({
         >
           <div className="flex grow flex-col border-r border-gray-200 bg-white px-6">
             <img
-              src="/images/Logo.png"
+              src="/images/Logo.svg"
               className="w-60 mt-6 mb-4"
               alt="Intermediary logo"
             />
