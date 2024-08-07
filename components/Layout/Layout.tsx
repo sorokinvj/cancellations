@@ -24,7 +24,7 @@ export default function ClientLayout({
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-right" reverseOrder={false} />
       <div
         className={clsx(
           'grid h-full w-screen grid-rows-[64px_1fr]',
