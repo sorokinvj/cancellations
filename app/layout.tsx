@@ -7,6 +7,7 @@ import Providers from './providers';
 export const metadata: Metadata = {
   title: 'Intermediary',
   description: 'Intermediary application',
+  manifest: '/favicon/site.webmanifest',
 };
 
 export default function RootLayout({
@@ -47,7 +48,6 @@ export default function RootLayout({
           sizes="512x512"
           href="/favicon/android-chrome-512x512.png"
         />
-        <link rel="manifest" href="/favicon/site.webmanifest" />
       </head>
       <body>
         <Providers>{children}</Providers>
