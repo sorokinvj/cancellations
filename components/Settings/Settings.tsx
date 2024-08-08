@@ -15,12 +15,19 @@ const Settings: React.FC = () => {
     queryFn: getTenants,
   });
   const tenant = tenants?.find(t => t.id === userData?.tenantId);
-  const tabs = [{ name: 'My Account', current: activeTab === 'My Account' }];
   const isProvider = userData?.tenantType === 'provider';
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
+
+  const tabs = [
+    { name: 'My Account', current: activeTab === 'My Account' },
+    {
+      name: 'Save Offers',
+      current: activeTab === 'Save Offers',
+    },
+  ];
 
   if (!userData) return null;
 
@@ -30,7 +37,7 @@ const Settings: React.FC = () => {
         <div className="flex h-[72px] flex-none items-center border-b bg-white px-[20px]">
           <div className="text-[24px] font-bold">Settings</div>
         </div>
-        <div className="flex-1 overflow-scroll bg-white">
+        <div className="">
           <div className="mx-auto w-full px-4">
             <div className="mb-10 mt-6 overflow-hidden border bg-white shadow sm:rounded-lg">
               <div className="p-6">

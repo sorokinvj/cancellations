@@ -8,11 +8,11 @@ initializeFirebaseAdmin();
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { tenantId: string; offerId: string } },
+  { params }: { params: { tenantId: string; saveOfferId: string } },
 ) {
-  const { tenantId, offerId } = params;
+  const { tenantId, saveOfferId } = params;
 
-  if (!tenantId || !offerId) {
+  if (!tenantId || !saveOfferId) {
     return NextResponse.json(
       { message: 'Invalid tenant ID or offer ID' },
       { status: 400 },
@@ -25,7 +25,6 @@ export async function PATCH(
   try {
     const updateData: Partial<SaveOffer> = await request.json();
 
-    // Validate the update data
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
         { message: 'No update data provided' },
@@ -36,35 +35,41 @@ export async function PATCH(
     const tenantDoc = await tenantRef.get();
     if (!tenantDoc.exists) {
       return NextResponse.json(
-        { message: 'Error: Company not found, contact support' },
+        { message: 'Tenant not found' },
         { status: 404 },
       );
     }
 
     const tenant = tenantDoc.data() as Tenant;
-    const offerIndex = tenant.saveOffers?.findIndex(
-      offer => offer.id === offerId,
-    );
 
-    if (offerIndex === undefined || offerIndex === -1) {
+    if (!tenant.saveOffers) {
       return NextResponse.json(
-        { message: 'Error: Save offer not found, contact support' },
+        { message: 'No save offers available' },
         { status: 404 },
       );
     }
 
-    const saveOffer = tenant.saveOffers?.[offerIndex];
+    const offerIndex = tenant.saveOffers.findIndex(
+      offer => offer.id === saveOfferId,
+    );
+    if (offerIndex === -1) {
+      return NextResponse.json(
+        { message: 'Save offer not found' },
+        { status: 404 },
+      );
+    }
 
-    // Update the specific offer
     const updatedOffer = {
-      ...saveOffer,
+      ...tenant.saveOffers[offerIndex],
       ...updateData,
       dateUpdated: new Date().toISOString(),
     };
 
-    // Update the tenant document
+    const updatedSaveOffers = [...tenant.saveOffers];
+    updatedSaveOffers[offerIndex] = updatedOffer;
+
     await tenantRef.update({
-      [`saveOffers.${offerIndex}`]: updatedOffer,
+      saveOffers: updatedSaveOffers,
     });
 
     return NextResponse.json(updatedOffer, {
@@ -81,11 +86,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { tenantId: string; offerId: string } },
+  { params }: { params: { tenantId: string; saveOfferId: string } },
 ) {
-  const { tenantId, offerId } = params;
-
-  if (!tenantId || !offerId) {
+  const { tenantId, saveOfferId } = params;
+  console.log('DELETE triggered', tenantId, saveOfferId);
+  if (!tenantId || !saveOfferId) {
     return NextResponse.json(
       { message: 'Invalid tenant ID or offer ID' },
       { status: 400 },
@@ -105,7 +110,9 @@ export async function DELETE(
     }
 
     const tenant = tenantDoc.data() as Tenant;
-    const offerExists = tenant.saveOffers?.some(offer => offer.id === offerId);
+    const offerExists = tenant.saveOffers?.some(
+      offer => offer.id === saveOfferId,
+    );
 
     if (!offerExists) {
       return NextResponse.json(
@@ -117,7 +124,7 @@ export async function DELETE(
     // Remove the specific offer
     await tenantRef.update({
       saveOffers: FieldValue.arrayRemove(
-        tenant.saveOffers?.find(offer => offer.id === offerId),
+        tenant.saveOffers?.find(offer => offer.id === saveOfferId),
       ),
     });
 

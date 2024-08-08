@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Modal from '@/components/ui/Modal';
 import { Button } from '@/components/ui/button';
 import { SaveOffer } from '@/lib/db/schema';
-import SimpleMDE from 'react-simplemde-editor';
+import SimpleMDEditor from 'react-simplemde-editor';
+import SimpleMDE from 'easymde';
+
 import 'easymde/dist/easymde.min.css';
 
 interface EditModalProps {
@@ -21,15 +23,23 @@ const EditModal: React.FC<EditModalProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  const changeTitle = useCallback((value: string) => {
+    setTitle(value);
+  }, []);
+
+  const changeDescription = useCallback((value: string) => {
+    setDescription(value);
+  }, []);
+
   useEffect(() => {
     if (offer) {
-      setTitle(offer.title);
-      setDescription(offer.description);
+      changeTitle(offer.title);
+      changeDescription(offer.description);
     } else {
       setTitle('');
       setDescription('');
     }
-  }, [offer]);
+  }, [offer, changeTitle, changeDescription]);
 
   const handleSave = () => {
     onSave({
@@ -40,6 +50,13 @@ const EditModal: React.FC<EditModalProps> = ({
     onClose();
   };
 
+  const autofocusNoSpellcheckerOptions = useMemo(() => {
+    return {
+      autofocus: true,
+      spellChecker: false,
+    } as SimpleMDE.Options;
+  }, []);
+
   return (
     <Modal
       shown={isVisible}
@@ -47,14 +64,14 @@ const EditModal: React.FC<EditModalProps> = ({
       title={offer ? 'Edit Save Offer' : 'Create New Save Offer'}
       size="lg"
       footer={
-        <>
-          <Button color="zinc" onClick={onClose}>
+        <div className="flex justify-end space-x-4">
+          <Button onClick={onClose} outline={true}>
             Cancel
           </Button>
           <Button color="blue" onClick={handleSave}>
             {offer ? 'Update' : 'Create'}
           </Button>
-        </>
+        </div>
       }
     >
       <div className="flex flex-col gap-4">
@@ -80,13 +97,10 @@ const EditModal: React.FC<EditModalProps> = ({
           >
             Description
           </label>
-          <SimpleMDE
+          <SimpleMDEditor
             value={description}
             onChange={setDescription}
-            options={{
-              spellChecker: true,
-              placeholder: 'Enter description (supports markdown)',
-            }}
+            options={autofocusNoSpellcheckerOptions}
           />
         </div>
       </div>
