@@ -5,6 +5,7 @@ import MyAccountTab from './MyAccountTab';
 import { useAuth } from '@/hooks/useAuth';
 import { getTenants } from '@/lib/api/tenant';
 import { useQuery } from '@tanstack/react-query';
+import SaveOffersTab from './SaveOfferTab/SaveOfferTab';
 
 const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('My Account');
@@ -13,9 +14,9 @@ const Settings: React.FC = () => {
     queryKey: ['tenants'],
     queryFn: getTenants,
   });
-  const tenantName = tenants?.find(t => t.id === userData?.tenantId)?.name;
-
+  const tenant = tenants?.find(t => t.id === userData?.tenantId);
   const tabs = [{ name: 'My Account', current: activeTab === 'My Account' }];
+  const isProvider = userData?.tenantType === 'provider';
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
@@ -54,9 +55,15 @@ const Settings: React.FC = () => {
                   </nav>
                 </div>
                 {activeTab === 'My Account' && (
-                  <MyAccountTab userData={userData} tenantName={tenantName} />
+                  <MyAccountTab userData={userData} tenantName={tenant?.name} />
                 )}
-                {/* {activeTab === 'Team' && <MyTeamTab people={people} />} */}
+                {activeTab === 'Save Offers' && isProvider && (
+                  <SaveOffersTab
+                    isAdmin={userData?.role === 'admin'}
+                    offers={tenant?.saveOffers}
+                    tenantId={userData?.tenantId}
+                  />
+                )}
               </div>
             </div>
           </div>

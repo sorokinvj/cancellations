@@ -70,6 +70,14 @@ export interface User {
   name: string;
 }
 
+export type SaveOffer = {
+  id: string;
+  dateCreated: string;
+  dateUpdated: string | null;
+  title: string;
+  description: string;
+};
+
 export interface Tenant {
   id: string;
   version: number;
@@ -78,6 +86,7 @@ export interface Tenant {
   createdAt: string;
   active: boolean;
   requiredCustomerInfo?: CustomerInfoField[]; // Only for provider tenants
+  saveOffers?: SaveOffer[];
 }
 
 export const CURRENT_SCHEMA_VERSION = 2;
