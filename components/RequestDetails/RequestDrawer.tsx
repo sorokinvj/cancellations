@@ -1,6 +1,6 @@
 // file: components/RequestDrawer/RequestDrawer.tsx
 'use client';
-import { useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Request, RequestWithLog } from '@/lib/db/schema';
 import RequestActions from '../RequestDetails/RequestActions';
 import RequestCard from '../RequestDetails/RequestCard';
@@ -31,25 +31,28 @@ const RequestDrawer: React.FC<RequestDrawerProps> = ({
       enabled: isOpen && !!request?.id && !!tenantType && !!tenantId,
     });
 
-  const isActionNeeded = useMemo(() => {
+  const [isWidgetVisible, setIsWidgetVisible] = useState(false);
+  const isActionNeeded: boolean = useMemo(() => {
     return (
       (tenantType === 'proxy' &&
-        (request?.declineReason || request?.status === 'Save Offered')) ||
+        (request?.declineReason !== null ||
+          request?.status === 'Save Offered')) ||
       (tenantType === 'provider' &&
         (request?.status === 'Save Accepted' ||
           request?.status === 'Save Declined'))
     );
   }, [tenantType, request]);
 
-  const [isWidgetVisible, closeWidget] = useReducer(
-    () => false,
-    isActionNeeded !== undefined,
-  );
+  useEffect(() => {
+    if (isActionNeeded) {
+      setIsWidgetVisible(isActionNeeded);
+    }
+  }, [isActionNeeded, request]);
 
   const queryClient = useQueryClient();
 
   const onFix = () => {
-    closeWidget();
+    setIsWidgetVisible(false);
     onClose();
     queryClient.invalidateQueries({
       queryKey: ['requests', tenantType, tenantId],
