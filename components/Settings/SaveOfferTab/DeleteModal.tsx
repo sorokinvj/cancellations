@@ -1,6 +1,5 @@
 import React from 'react';
-import Modal from '@/components/ui/Modal';
-import { Button } from '@/components/ui/button';
+import { Button, Modal } from '@/components/ui/';
 import { SaveOffer } from '@/lib/db/schema';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
