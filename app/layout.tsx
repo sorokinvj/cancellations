@@ -7,7 +7,6 @@ import '@/app/globals.css';
 export const metadata: Metadata = {
   title: 'Intermediary',
   description: 'Intermediary application',
-  manifest: '/favicon/site.webmanifest',
 };
 
 export default function RootLayout({
