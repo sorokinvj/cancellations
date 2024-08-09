@@ -4,36 +4,17 @@ import { Select as SelectTremor, SelectItem } from '@tremor/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Markdown from 'react-markdown';
 import { IoMdSave } from 'react-icons/io';
-import { Request } from '@/lib/db/schema';
+import { Request, RequestStatus, SaveOffer } from '@/lib/db/schema';
 import { updateRequest } from '@/lib/api/request';
 import { getTenants } from '@/lib/api/tenant';
-import { Components } from 'react-markdown';
+import Spinner from '@/components/ui/spinner';
+import { markdownComponents } from '@/utils/md.utils';
 
 interface SaveOfferModalProps {
   isVisible: boolean;
   request: Request;
   closeModal: () => void;
 }
-
-const PreComponent: Components['pre'] = ({ children, ...props }) => {
-  return (
-    <pre className="whitespace-pre-wrap break-words overflow-x-auto" {...props}>
-      {children}
-    </pre>
-  );
-};
-
-const CodeComponent: Components['code'] = ({
-  className,
-  children,
-  ...props
-}) => {
-  return (
-    <code className={className} {...props}>
-      {children}
-    </code>
-  );
-};
 
 const SaveOfferModal: React.FC<SaveOfferModalProps> = ({
   isVisible,
@@ -50,7 +31,17 @@ const SaveOfferModal: React.FC<SaveOfferModalProps> = ({
   )?.saveOffers;
 
   const mutation = useMutation({
-    mutationFn: updateRequest,
+    mutationFn: (offer: SaveOffer) => {
+      const updatedRequest = {
+        ...request,
+        status: 'Save Offered' as RequestStatus,
+        saveOffer: { ...offer, dateOffered: new Date().toISOString() },
+      };
+      return updateRequest(updatedRequest);
+    },
+    onSettled: () => {
+      closeModal();
+    },
   });
 
   const selectedOffer = useMemo(() => {
@@ -63,13 +54,7 @@ const SaveOfferModal: React.FC<SaveOfferModalProps> = ({
 
   const handleConfirm = () => {
     if (selectedOffer) {
-      mutation.mutate({
-        ...request,
-        saveOffer: {
-          ...selectedOffer,
-          dateOffered: new Date().toISOString(),
-        },
-      });
+      mutation.mutate(selectedOffer);
     }
   };
 
@@ -77,34 +62,6 @@ const SaveOfferModal: React.FC<SaveOfferModalProps> = ({
     value: offer.id,
     label: offer.title,
   }));
-
-  const markdownComponents: Components = {
-    p: ({ children, ...props }) => (
-      <p
-        style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}
-        {...props}
-      >
-        {children}
-      </p>
-    ),
-    pre: PreComponent,
-    code: CodeComponent,
-    ul: ({ children, ...props }) => (
-      <ul className="list-disc pl-4" {...props}>
-        {children}
-      </ul>
-    ),
-    ol: ({ children, ...props }) => (
-      <ol className="list-decimal pl-4" {...props}>
-        {children}
-      </ol>
-    ),
-    li: ({ children, ...props }) => (
-      <li className="mb-1" {...props}>
-        {children}
-      </li>
-    ),
-  };
 
   return (
     <Modal shown={isVisible} onClose={closeModal} title="Save Offer">
@@ -140,7 +97,13 @@ const SaveOfferModal: React.FC<SaveOfferModalProps> = ({
         <div className="flex justify-end space-x-4">
           <Button onClick={closeModal}>Cancel</Button>
           <Button onClick={handleConfirm} color="blue">
-            <IoMdSave className="text-xl" /> Confirm Offer
+            {mutation.isPending ? (
+              <Spinner color="white" />
+            ) : (
+              <>
+                <IoMdSave className="text-xl" /> Confirm Offer
+              </>
+            )}
           </Button>
         </div>
       </div>
