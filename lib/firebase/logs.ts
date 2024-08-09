@@ -4,6 +4,7 @@ import {
   RequestLog,
   RequestChange,
   TenantType,
+  RequestSaveOffer,
 } from '@/lib/db/schema';
 import { NextRequest } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
@@ -58,6 +59,29 @@ export const detectChanges = (
                 infoKey as keyof typeof currentCustomerInfo
               ] || null,
             newValue: infoValue,
+          });
+        }
+      }
+    } else if (key === 'saveOffer') {
+      // Handle saveOffer separately
+      const currentSaveOffer =
+        currentRequest.saveOffer || ({} as RequestSaveOffer);
+      const updatedSaveOffer = newValue as Partial<RequestSaveOffer>;
+      const saveOfferFields: (keyof RequestSaveOffer)[] = [
+        'id',
+        'title',
+        'dateOffered',
+        'dateAccepted',
+        'dateDeclined',
+        'dateConfirmed',
+      ];
+
+      for (const field of saveOfferFields) {
+        if (updatedSaveOffer[field] !== currentSaveOffer[field]) {
+          changes.push({
+            field: `saveOffer.${field}`,
+            oldValue: currentSaveOffer[field] || null,
+            newValue: updatedSaveOffer[field] || null,
           });
         }
       }

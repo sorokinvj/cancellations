@@ -27,15 +27,13 @@ const RequestDetails: React.FC<{ request: Request | null }> = ({ request }) => {
     providerTenantId,
     customerInfo,
     successfullyResolved,
-    rescueOffer,
-    rescueOfferText,
+    saveOffer,
     declineReason,
     notes,
     logId,
   } = request;
 
-  const hasAdditonalDetails =
-    rescueOffer || rescueOfferText || declineReason || notes;
+  const hasAdditonalDetails = saveOffer || declineReason || notes;
 
   return (
     <div>
@@ -91,11 +89,14 @@ const RequestDetails: React.FC<{ request: Request | null }> = ({ request }) => {
           {hasAdditonalDetails && (
             <div className="bg-white p-4 rounded-lg">
               <h2 className="text-xl font-semibold mb-4">Additional Details</h2>
-              {rescueOffer && (
-                <InfoItem label="Rescue Offer" value={rescueOffer} />
+              {saveOffer && (
+                <InfoItem label="Save Offer" value={saveOffer.title} />
               )}
-              {rescueOfferText && (
-                <InfoItem label="Rescue Offer Text" value={rescueOfferText} />
+              {saveOffer && (
+                <InfoItem
+                  label="Save Offer Text"
+                  value={saveOffer.description}
+                />
               )}
               {declineReason && (
                 <InfoItem label="Decline Reason" value={declineReason} />

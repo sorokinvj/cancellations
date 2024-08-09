@@ -16,6 +16,13 @@ export type CustomerInfoField =
 
 export type CustomerInfo = { [K in CustomerInfoField]?: string };
 
+export type RequestSaveOffer = SaveOffer & {
+  dateOffered: string | null;
+  dateAccepted?: string | null;
+  dateDeclined?: string | null;
+  dateConfirmed?: string | null;
+};
+
 export interface Request {
   id: string;
   version: number;
@@ -28,8 +35,7 @@ export interface Request {
   providerTenantId: string;
   customerInfo: CustomerInfo;
   successfullyResolved: boolean | null;
-  rescueOffer: string | null;
-  rescueOfferText: string | null;
+  saveOffer: RequestSaveOffer | null;
   declineReason: string | null;
   notes: string | null;
   logId: string;
@@ -70,6 +76,14 @@ export interface User {
   name: string;
 }
 
+export type SaveOffer = {
+  id: string;
+  dateCreated: string;
+  dateUpdated: string | null;
+  title: string;
+  description: string;
+};
+
 export interface Tenant {
   id: string;
   version: number;
@@ -78,6 +92,7 @@ export interface Tenant {
   createdAt: string;
   active: boolean;
   requiredCustomerInfo?: CustomerInfoField[]; // Only for provider tenants
+  saveOffers?: SaveOffer[];
 }
 
 export const CURRENT_SCHEMA_VERSION = 2;

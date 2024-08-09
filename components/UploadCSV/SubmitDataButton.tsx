@@ -60,8 +60,7 @@ const SubmitDataButton = () => {
         customerInfo,
         notes: null,
         successfullyResolved: null,
-        rescueOffer: null,
-        rescueOfferText: null,
+        saveOffer: null,
         declineReason: null,
       };
     });
