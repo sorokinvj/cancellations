@@ -7,7 +7,7 @@ import { Request, Tenant } from '@/lib/db/schema';
 import { useFormContext, useController, Controller } from 'react-hook-form';
 import { FC } from 'react';
 import { Select as SelectTremor, SelectItem } from '@tremor/react';
-import Spinner from '../ui/spinner';
+import Spinner from '../../ui/spinner';
 import { getDisplayHeader } from '@/utils/template.utils';
 
 export type CellProps<R, T> = {
@@ -74,9 +74,9 @@ const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
   const displayValue = field.value === null ? '' : field.value ? 'Yes' : 'No';
 
   return (
-    <div onClick={e => e.stopPropagation()}>
+    <div onClick={e => e.stopPropagation()} className="text-center">
       <RadioGroup
-        className={`flex gap-4 ${errors.successfullyResolved ? 'border border-red-500 p-2 rounded' : ''}`}
+        className={`flex gap-4 justify-center ${errors.successfullyResolved ? 'border border-red-500 p-2 rounded' : ''}`}
         value={displayValue}
         onChange={handleChange}
       >
@@ -96,7 +96,7 @@ const ResolveCell: React.FC<CellProps<Request, boolean | null>> = ({
   );
 };
 
-const TenantCell: FC<{ name: string; isLoading: boolean }> = ({
+const TenantCell: FC<{ name?: string; isLoading: boolean }> = ({
   name,
   isLoading,
 }) => {

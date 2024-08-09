@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import Modal from '@/components/ui/Modal';
-import { Button } from '@/components/ui/button';
+import { Modal, Button } from '@/components/ui';
 import { SaveOffer } from '@/lib/db/schema';
 import SimpleMDEditor from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
-
 import 'easymde/dist/easymde.min.css';
 
 interface EditModalProps {
@@ -28,6 +26,7 @@ const EditModal: React.FC<EditModalProps> = ({
   }, []);
 
   const changeDescription = useCallback((value: string) => {
+    console.log('text', value);
     setDescription(value);
   }, []);
 
@@ -54,6 +53,10 @@ const EditModal: React.FC<EditModalProps> = ({
     return {
       autofocus: true,
       spellChecker: false,
+      lineWrapping: true, // Enable line wrapping
+      renderingConfig: {
+        singleLineBreaks: false, // Preserve single line-breaks
+      },
     } as SimpleMDE.Options;
   }, []);
 

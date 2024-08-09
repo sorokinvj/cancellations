@@ -20,10 +20,10 @@ import {
   RequestTypeCell,
   DeclineReasonCell,
   TenantCell,
-} from './Cell';
+} from './cells/Cell';
+import SaveOfferCell from './cells/SaveOfferCell';
 import ReportButton from './ReportButton';
 import RequestRow from './Row';
-import useFirebase from '@/hooks/useFirebase';
 import { generateCustomerInfoColumns } from './table.utils';
 import { CustomColumnMeta } from '@/constants/app.types';
 import clsx from 'clsx';
@@ -33,6 +33,8 @@ import RequestDrawer from '../RequestDetails/RequestDrawer';
 import EmptyRequestsState from './EmptyTable';
 import { FaCheckCircle } from 'react-icons/fa';
 import { FaCircleXmark } from 'react-icons/fa6';
+import { getTenants } from '@/lib/api/tenant';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
   requests: Request[];
@@ -48,10 +50,16 @@ const RequestsTable: FC<Props> = ({
   isReadOnly,
 }) => {
   const { userData } = useAuth();
-  const isProviderUser = userData?.tenantType === 'provider';
-  const { data: tenants, loading: tenantsLoading } = useFirebase({
-    collectionName: 'tenants',
+  const { data: tenants, isLoading: tenantsLoading } = useQuery({
+    queryKey: ['tenants'],
+    queryFn: getTenants,
   });
+  const isProviderUser = userData?.tenantType === 'provider';
+  const hasSaveOffers =
+    Number(
+      tenants?.find(t => t.id === userData?.tenantId)?.saveOffers?.length,
+    ) > 0;
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
 
@@ -66,29 +74,20 @@ const RequestsTable: FC<Props> = ({
 
   const customerInfoColumns = generateCustomerInfoColumns(requests);
   const columns = [
-    {
-      header: hasFixButton && !isProviderUser ? '' : 'ID',
-      accessorKey: 'id',
-      cell: ({
-        cell,
-        row,
-      }: {
-        cell: Cell<Request, string>;
-        row: Row<Request>;
-      }) => {
-        if (hasFixButton && !isProviderUser) {
-          return (
-            <div onClick={e => e.stopPropagation()}>
-              <Button onClick={() => toggleDrawer(row.original)} color="blue">
-                Fix Data
-              </Button>
-            </div>
-          );
-        }
-        return cell.getValue();
-      },
-      size: 100,
-    },
+    ...(hasFixButton && !isProviderUser
+      ? [
+          {
+            accessorKey: 'id',
+            cell: ({ row }: { row: Row<Request> }) => (
+              <div onClick={e => e.stopPropagation()}>
+                <Button onClick={() => toggleDrawer(row.original)} color="blue">
+                  Fix Data
+                </Button>
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       header: 'Status',
       accessorKey: 'status',
@@ -127,6 +126,15 @@ const RequestsTable: FC<Props> = ({
       cell: DateCell,
     },
     ...customerInfoColumns,
+    ...(isProviderUser && hasSaveOffers
+      ? [
+          {
+            header: 'Save Offer',
+            accessorKey: 'saveOffer',
+            cell: SaveOfferCell,
+          },
+        ]
+      : []),
     {
       header: 'Successfully Resolved',
       className: 'text-center', // This centers the header text
